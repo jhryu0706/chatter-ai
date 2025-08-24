@@ -10,25 +10,35 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
+import { fetchAgents } from "@/lib/actions/agent-actions";
 
-export function AppSidebar() {
-  const avatars = {
-    //TODO: query for all avatars, change the href={"/test"}
-  };
+export async function AppSidebar() {
+  const agents = await fetchAgents();
   return (
     <Sidebar>
       <SidebarContent className="p-4">
         <SidebarGroup>
-          <SidebarGroupLabel>Application</SidebarGroupLabel>
-          <SidebarGroupContent>
+          <SidebarGroupLabel className="text-lg">All Agents</SidebarGroupLabel>
+          <SidebarGroupContent className="py-4">
             <SidebarMenu>
-              <SidebarMenuItem key="test">
-                <SidebarMenuButton asChild>
-                  <a href={"/test"}>
-                    <span>test</span>
-                  </a>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
+              {agents &&
+                agents.map((agent, index) => (
+                  <SidebarMenuItem key={agent.id}>
+                    <SidebarMenuButton asChild>
+                      <a
+                        href={`/agent/${agent.id}`}
+                        className="py-2 h-full flex-col w-full items-start"
+                      >
+                        <span className="text-md text-black">
+                          {agent.name || `Agent ${index + 1}`}
+                        </span>
+                        <span className="text-sm text-muted-foreground mt-1 whitespace-pre-wrap">
+                          {agent.instructions}
+                        </span>
+                      </a>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                ))}
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>

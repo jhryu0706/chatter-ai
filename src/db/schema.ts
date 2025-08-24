@@ -16,13 +16,13 @@ export const agents = pgTable("agents",{
   id: text("id")
     .primaryKey()
     .$defaultFn(()=>nanoid()),
-  name:text("name").notNull(),
+  name:text("name").default("Untitled"),
   userId: text("user_id")
     .notNull()
     .references(()=>user.id, {onDelete:"cascade"}),
   instructions:text("instructions").notNull(),
   createdAt: timestamp("created_at").notNull().defaultNow(),
-  updatedAt: timestamp("updatedAt").notNull().defaultNow()
+  updatedAt: timestamp("updated_at").notNull().defaultNow()
 })
 
 export const meetingStatus = pgEnum("meeting_status", [
@@ -51,5 +51,5 @@ export const meetings = pgTable("meetings",{
   recordingUrl: text("recording_url"),
   summary: text("summary"),
   createdAt: timestamp("created_at").notNull().defaultNow(),
-  updatedAt: timestamp("updatedAt").notNull().defaultNow()
+  updatedAt: timestamp("updated_at").notNull().defaultNow()
 })
