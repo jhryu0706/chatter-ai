@@ -26,10 +26,14 @@ type PageProps = {
 
 export default async function AgentPage({ params }: PageProps) {
   const id = params.id;
-  const agent = await fetchOneAgent(id);
+  const agent = await db
+    .select()
+    .from(agents)
+    .where(eq(agents.id, id))
+    .then((rows) => rows[0]);
 
   if (!agent) {
-    return redirect("/");
+    redirect("/");
   }
 
   return (
