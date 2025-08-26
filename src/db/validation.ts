@@ -8,3 +8,14 @@ export const agentInsertSchemaForUser = createInsertSchema(agents, {
 .pick({
     instructions:true
 })
+
+export const agentNameUpdateSchemaForUser = createInsertSchema(agents, {
+    name: z
+    .string()
+    .trim()
+    .max(20, "The maximum length for an agent name is 20 characters. Provide a shorter name.")
+    .min(1, "The input is empty.")
+})
+.pick({
+    name:true
+})

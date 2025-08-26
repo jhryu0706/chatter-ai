@@ -3,12 +3,12 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { createAgent } from "@/lib/actions/agent-actions";
+import { createNewAgent } from "@/lib/actions/agent-actions";
 import { useRouter } from "next/navigation";
 import { useActionState, useEffect } from "react";
 
 export default function AgentForm() {
-  const [state, formAction, isPending] = useActionState(createAgent, {});
+  const [state, formAction, isPending] = useActionState(createNewAgent, {});
   const router = useRouter();
 
   useEffect(() => {

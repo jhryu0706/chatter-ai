@@ -1,6 +1,6 @@
 import "./globals.css";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
-import { AppSidebar } from "@/components/app-sidebar";
+import { AppSidebar } from "@/components/app/sidebar";
 import { Inter } from "next/font/google";
 
 const inter = Inter({
@@ -21,7 +21,7 @@ export default function RootLayout({
           <AppSidebar />
           <SidebarTrigger />
           <main className="w-full flex flex-col flex-1 overflow-auto">
-            <div className="mx-auto w-full px-4 sm:px-6 lg:px-8 py-8">
+            <div className="mx-auto w-full px-4 sm:px-6 lg:px-8 py-8 space-y-4">
               {children}
             </div>
           </main>

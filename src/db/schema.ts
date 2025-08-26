@@ -1,5 +1,5 @@
-import {nanoid} from "nanoid"
 import { pgTable, text,boolean,timestamp, pgEnum } from "drizzle-orm/pg-core";
+import { ulid } from "ulid";
 
 // user tables
 export const user = pgTable("user", {
@@ -15,12 +15,13 @@ export const user = pgTable("user", {
 export const agents = pgTable("agents",{
   id: text("id")
     .primaryKey()
-    .$defaultFn(()=>nanoid()),
-  name:text("name").default("Untitled"),
+    .$defaultFn(()=>ulid()),
+  name:text("name"),
   userId: text("user_id")
     .notNull()
     .references(()=>user.id, {onDelete:"cascade"}),
   instructions:text("instructions").notNull(),
+  cleaned_instructions:text("cleaned_instructions"),
   createdAt: timestamp("created_at").notNull().defaultNow(),
   updatedAt: timestamp("updated_at").notNull().defaultNow()
 })
@@ -36,7 +37,7 @@ export const meetingStatus = pgEnum("meeting_status", [
 export const meetings = pgTable("meetings",{
   id: text("id")
     .primaryKey()
-    .$defaultFn(()=>nanoid()),
+    .$defaultFn(()=>ulid()),
   name:text("name").notNull(),
   userId: text("user_id")
     .notNull()

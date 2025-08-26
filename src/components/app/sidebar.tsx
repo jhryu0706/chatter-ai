@@ -22,7 +22,7 @@ export async function AppSidebar() {
           <SidebarGroupContent className="py-4">
             <SidebarMenu>
               {agents &&
-                agents.map((agent, index) => (
+                agents.map((agent) => (
                   <SidebarMenuItem key={agent.id}>
                     <SidebarMenuButton asChild>
                       <a
@@ -30,7 +30,7 @@ export async function AppSidebar() {
                         className="py-2 h-full flex-col w-full items-start"
                       >
                         <span className="text-md text-black">
-                          {agent.name || `Agent ${index + 1}`}
+                          {agent.name || `Agent ${agent.id.slice(-4)}`}
                         </span>
                         <span className="text-sm text-muted-foreground mt-1 whitespace-pre-wrap">
                           {agent.instructions}
