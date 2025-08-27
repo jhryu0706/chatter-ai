@@ -1,3 +1,4 @@
+import { Conversation } from "@/components/eleven/conversation";
 import { Button } from "@/components/ui/button";
 import { Card, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";

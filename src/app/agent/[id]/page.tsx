@@ -1,4 +1,5 @@
 import AgentButtonGroup from "@/components/agent/agent-button-group";
+import AgentVoiceSample from "@/components/agent/agent-voice-sample";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -59,6 +60,7 @@ export default async function AgentPage({ params }: PageProps) {
           Description: {agent.instructions}
         </p>
         <AgentButtonGroup agentId={`${agent.id}`} />
+        <AgentVoiceSample />
       </div>
     </>
   );

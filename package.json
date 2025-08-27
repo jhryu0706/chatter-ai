@@ -12,6 +12,8 @@
     "inngest:studio": "npx inngest-cli@latest dev"
   },
   "dependencies": {
+    "@elevenlabs/elevenlabs-js": "^2.12.2",
+    "@elevenlabs/react": "^0.5.1",
     "@hookform/resolvers": "^5.2.1",
     "@inngest/agent-kit": "^0.9.0",
     "@neondatabase/serverless": "^1.0.1",
