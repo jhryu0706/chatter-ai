@@ -14,6 +14,7 @@ import { fetchAgents } from "@/lib/actions/agent-actions";
 
 export async function AppSidebar() {
   const agents = await fetchAgents();
+
   return (
     <Sidebar>
       <SidebarContent className="p-4">
@@ -24,15 +25,18 @@ export async function AppSidebar() {
               {agents &&
                 agents.map((agent) => (
                   <SidebarMenuItem key={agent.id}>
-                    <SidebarMenuButton asChild>
+                    <SidebarMenuButton
+                      asChild
+                      className="h-auto p-0 overflow-visible"
+                    >
                       <a
                         href={`/agent/${agent.id}`}
-                        className="py-2 h-full flex-col w-full items-start"
+                        className="flex w-full flex-col items-start px-2 py-2"
                       >
                         <span className="text-md text-black">
                           {agent.name || `Agent ${agent.id.slice(-4)}`}
                         </span>
-                        <span className="text-sm text-muted-foreground mt-1 whitespace-pre-wrap">
+                        <span className="text-sm text-muted-foreground mt-1 break-words w-full">
                           {agent.instructions}
                         </span>
                       </a>
