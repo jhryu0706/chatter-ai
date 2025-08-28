@@ -1,3 +1,4 @@
+import { int } from "drizzle-orm/mysql-core";
 import { pgTable, text,boolean,timestamp, pgEnum } from "drizzle-orm/pg-core";
 import { ulid } from "ulid";
 
@@ -53,4 +54,12 @@ export const meetings = pgTable("meetings",{
   summary: text("summary"),
   createdAt: timestamp("created_at").notNull().defaultNow(),
   updatedAt: timestamp("updated_at").notNull().defaultNow()
+})
+
+export const voices = pgTable("voices", {
+  id:text("id")
+  .primaryKey().notNull(),
+  name:text("name").notNull(),
+  description:text("description"),
+  orderNumber: int("order_no")
 })
