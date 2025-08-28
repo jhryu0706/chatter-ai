@@ -36,22 +36,22 @@ export async function fetchAllVoices() {
 }
 
 // call this when you need to refresh voices
-export async function uploadVoices() {
-  const allVoices = fetchAllVoices();
-  const formattedVocies = (await allVoices).voices.map((voice, index) => ({
-    id: voice.voiceId.toString(),
-    name: voice.name?.toString(),
-    description: voice.description?.toString(),
-    orderNumber: index,
-  }));
-  let result;
-  try {
-    result = await db
-      .insert(voices)
-      .values(formattedVocies)
-      .onConflictDoNothing();
-  } catch (err) {
-    return err;
-  }
-  return result;
-}
+// export async function uploadVoices() {
+//   const allVoices = fetchAllVoices();
+//   const formattedVocies = (await allVoices).voices.map((voice, index) => ({
+//     id: voice.voiceId.toString(),
+//     name: voice.name?.toString(),
+//     description: voice.description?.toString(),
+//     orderNumber: index,
+//   }));
+//   let result;
+//   try {
+//     result = await db
+//       .insert(voices)
+//       .values(formattedVocies)
+//       .onConflictDoNothing();
+//   } catch (err) {
+//     return err;
+//   }
+//   return result;
+// }

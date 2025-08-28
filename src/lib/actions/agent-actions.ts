@@ -1,13 +1,24 @@
 "use server"
 
 import { db } from "@/db/index";
-import { agents, user } from "@/db/schema";
+import { agents, user, voices } from "@/db/schema";
 import { getSessionFromCookies } from "../sessionStore";
 import { agentInsertSchemaForUser, agentNameUpdateSchemaForUser } from "@/db/validation";
 import { desc, eq } from "drizzle-orm";
 import { inngest } from "@/inngest/client";
 
 export type State = {success?: boolean, message?:string; error?:string};
+
+async function assignVoice(): Promise<string> {
+        const rand = Math.floor(Math.random()*22)
+        const result = await db
+        .select({id:voices.id})
+        .from(voices)
+        .where(eq(voices.orderNumber, rand))
+        .limit(1)
+        return result[0]?.id??null;
+    }
+
 
 export async function createNewAgent(prev: State, form: FormData): Promise<State> {
     const sid = await getSessionFromCookies()
@@ -20,11 +31,16 @@ export async function createNewAgent(prev: State, form: FormData): Promise<State
             success: false, error: result.error.message
         }
     }
+    
+    // randomly assigning a voice
+    const voiceId = await assignVoice()
+
 
     try {
         const inserted = await db.insert(agents).values({
             instructions: result.data.instructions,
             userId: sid!,
+            voiceId
         }).returning({
             id:agents.id
         })

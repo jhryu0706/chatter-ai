@@ -1,5 +1,4 @@
-import { int } from "drizzle-orm/mysql-core";
-import { pgTable, text,boolean,timestamp, pgEnum } from "drizzle-orm/pg-core";
+import { pgTable, text,boolean,timestamp, pgEnum, integer } from "drizzle-orm/pg-core";
 import { ulid } from "ulid";
 
 // user tables
@@ -24,7 +23,8 @@ export const agents = pgTable("agents",{
   instructions:text("instructions").notNull(),
   cleaned_instructions:text("cleaned_instructions"),
   createdAt: timestamp("created_at").notNull().defaultNow(),
-  updatedAt: timestamp("updated_at").notNull().defaultNow()
+  updatedAt: timestamp("updated_at").notNull().defaultNow(),
+  voiceId: text("voice_id").notNull().references(()=>voices.id, {onDelete:"cascade"})
 })
 
 export const meetingStatus = pgEnum("meeting_status", [
@@ -61,5 +61,5 @@ export const voices = pgTable("voices", {
   .primaryKey().notNull(),
   name:text("name").notNull(),
   description:text("description"),
-  orderNumber: int("order_no")
+  orderNumber: integer("order_no")
 })
