@@ -21,7 +21,8 @@ export const agents = pgTable("agents",{
     .notNull()
     .references(()=>user.id, {onDelete:"cascade"}),
   instructions:text("instructions").notNull(),
-  cleaned_instructions:text("cleaned_instructions"),
+  voiceSampleInstructions:text("voice_sample_instructions"),
+  voiceSampleURL: text("voice_sample_url"),
   createdAt: timestamp("created_at").notNull().defaultNow(),
   updatedAt: timestamp("updated_at").notNull().defaultNow(),
   voiceId: text("voice_id").notNull().references(()=>voices.id, {onDelete:"cascade"})

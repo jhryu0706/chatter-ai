@@ -6,11 +6,12 @@ import { getSessionFromCookies } from "../sessionStore";
 import { agentInsertSchemaForUser, agentNameUpdateSchemaForUser } from "@/db/validation";
 import { desc, eq } from "drizzle-orm";
 import { inngest } from "@/inngest/client";
+import { NUMBER_OF_AGENTS } from "../utils";
 
 export type State = {success?: boolean, message?:string; error?:string};
 
 async function assignVoice(): Promise<string> {
-        const rand = Math.floor(Math.random()*22)
+        const rand = Math.floor(Math.random()*NUMBER_OF_AGENTS)
         const result = await db
         .select({id:voices.id})
         .from(voices)
@@ -18,7 +19,6 @@ async function assignVoice(): Promise<string> {
         .limit(1)
         return result[0]?.id??null;
     }
-
 
 export async function createNewAgent(prev: State, form: FormData): Promise<State> {
     const sid = await getSessionFromCookies()
@@ -35,7 +35,6 @@ export async function createNewAgent(prev: State, form: FormData): Promise<State
     // randomly assigning a voice
     const voiceId = await assignVoice()
 
-
     try {
         const inserted = await db.insert(agents).values({
             instructions: result.data.instructions,
@@ -44,15 +43,17 @@ export async function createNewAgent(prev: State, form: FormData): Promise<State
         }).returning({
             id:agents.id
         })
+        console.log("IR: inserted", inserted)
 
         const insertedId = inserted[0].id
 
         inngest.send({
-            name:"ai/generate.agent.name",
+            name:"agent/created",
             data: {
                 "agentId": insertedId,
-                "description": result.data.instructions
-        }
+                "description": result.data.instructions,
+                "voiceId": voiceId
+            }
         })
     } catch(err) {
         console.error("Error inserting agent to DB: ", err)

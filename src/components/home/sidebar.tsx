@@ -30,10 +30,22 @@ export async function AppSidebar() {
       <SidebarContent className="p-4">
         <SidebarGroup>
           <SidebarGroupLabel className={sidebarStyles.groupLabel}>
-            Resources
+            Get Started
           </SidebarGroupLabel>
           <SidebarContent className={sidebarStyles.groupContent}>
             <SidebarMenu>
+              <SidebarMenuItem key="create-an-agent-page">
+                <SidebarMenuButton
+                  asChild
+                  className={sidebarStyles.sidebarMenuButton}
+                >
+                  <a href="/" className={sidebarStyles.sidebarA}>
+                    <span className={sidebarStyles.siebarHeader}>
+                      Create an Agent
+                    </span>
+                  </a>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
               <SidebarMenuItem key="resource-page">
                 <SidebarMenuButton
                   asChild
@@ -43,7 +55,9 @@ export async function AppSidebar() {
                     href="/resources/voices"
                     className={sidebarStyles.sidebarA}
                   >
-                    <span className={sidebarStyles.siebarHeader}>Voices</span>
+                    <span className={sidebarStyles.siebarHeader}>
+                      Voice Library
+                    </span>
                   </a>
                 </SidebarMenuButton>
               </SidebarMenuItem>
@@ -57,27 +71,43 @@ export async function AppSidebar() {
           </SidebarGroupLabel>
           <SidebarGroupContent className={sidebarStyles.groupContent}>
             <SidebarMenu>
-              {agents &&
-                agents.map((agent) => (
-                  <SidebarMenuItem key={agent.id}>
-                    <SidebarMenuButton
-                      asChild
-                      className={sidebarStyles.sidebarMenuButton}
-                    >
-                      <a
-                        href={`/agent/${agent.id}`}
-                        className="flex w-full flex-col items-start px-2 py-2"
+              {agents && agents.length > 0 ? (
+                <>
+                  {agents.map((agent) => (
+                    <SidebarMenuItem key={agent.id}>
+                      <SidebarMenuButton
+                        asChild
+                        className={sidebarStyles.sidebarMenuButton}
                       >
-                        <span className={sidebarStyles.siebarHeader}>
-                          {agent.name || `Agent ${agent.id.slice(-4)}`}
-                        </span>
-                        <span className={sidebarStyles.sidebarSubHeader}>
-                          {agent.instructions}
-                        </span>
-                      </a>
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                ))}
+                        <a
+                          href={`/agent/${agent.id}`}
+                          className="flex w-full flex-col items-start px-2 py-2"
+                        >
+                          <span className={sidebarStyles.siebarHeader}>
+                            {agent.name || `Agent ${agent.id.slice(-4)}`}
+                          </span>
+                          <span className={sidebarStyles.sidebarSubHeader}>
+                            {agent.instructions}
+                          </span>
+                        </a>
+                      </SidebarMenuButton>
+                    </SidebarMenuItem>
+                  ))}{" "}
+                </>
+              ) : (
+                <SidebarMenuItem key={"no-agents"}>
+                  <SidebarMenuButton
+                    asChild
+                    className={sidebarStyles.sidebarMenuButton}
+                  >
+                    <a className="flex w-full flex-col items-start px-2 py-2">
+                      <span className={sidebarStyles.siebarHeader}>
+                        No agents yet!
+                      </span>
+                    </a>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              )}
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>

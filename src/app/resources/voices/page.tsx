@@ -1,6 +1,5 @@
 import VoiceLibrary from "@/components/agent/voice-library";
 import { SetBreadcrumb } from "@/components/home/breadcrumb-context";
-import { uploadVoices } from "@/lib/elevenlabs/elevenlabs-actions";
 
 export default function Page() {
   return (

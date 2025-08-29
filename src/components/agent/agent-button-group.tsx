@@ -33,15 +33,15 @@ export default function AgentButtonGroup({ agentId }: AgentButtonGroupProps) {
   }, [state]);
 
   return (
-    <div role="group" className="flex items-center gap-2">
+    <div role="group" className="flex items-start gap-2">
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
-          <Button variant="outline">Edit</Button>
+          <Button variant="secondary">Edit Name</Button>
         </PopoverTrigger>
         <PopoverContent>
           <div className="grid gap-4">
             <div className="space-y-2">
-              <h4 className="leading-none font-medium">Edit Agent</h4>
+              <h4 className="leading-none font-medium">Edit</h4>
               <p className="text-muted-foreground text-sm">
                 Update agent name.
               </p>
@@ -70,7 +70,7 @@ export default function AgentButtonGroup({ agentId }: AgentButtonGroupProps) {
       </Popover>
       <Popover open={delOpen} onOpenChange={setDelOpen}>
         <PopoverTrigger asChild>
-          <Button variant="outline">Delete</Button>
+          <Button variant="secondary">Delete</Button>
         </PopoverTrigger>
         <PopoverContent>
           <div className="grid gap-4">

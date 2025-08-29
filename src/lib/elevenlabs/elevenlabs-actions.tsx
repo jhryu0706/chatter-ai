@@ -8,7 +8,7 @@ const elevenlabs = new ElevenLabsClient({
   apiKey: process.env.ELEVENLABS_API_KEY,
 });
 
-export async function generateSampleAudio(
+export async function fetchSampleAudio(
   voiceId: string,
   text: string
 ): Promise<String> {
@@ -28,7 +28,10 @@ export async function generateSampleAudio(
   }
 
   const buffer = Buffer.concat(chunks);
-  return buffer.toString("base64");
+  const base64 = buffer.toString("base64");
+
+  const audioURL = `data:audio/mpeg;base64,${base64}`;
+  return audioURL;
 }
 
 export async function fetchAllVoices() {

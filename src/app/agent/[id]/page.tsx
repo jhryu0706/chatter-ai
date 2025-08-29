@@ -6,6 +6,8 @@ import { db } from "@/db";
 import { agents } from "@/db/schema";
 import { eq } from "drizzle-orm";
 import { redirect } from "next/navigation";
+import AgentAudioSample from "@/components/agent/agent-audio-sample";
+import { Separator } from "@radix-ui/react-separator";
 
 type PageProps = {
   params: {
@@ -30,14 +32,20 @@ export default async function AgentPage({ params }: PageProps) {
   return (
     <>
       <SetBreadcrumb label={agentName} href={`/agent/${agent.id}`} />
-      <div className="flex items-center space-x-2" role="group">
-        <h1 className="text-4xl font-bold">{agentName}</h1>
+      <div className="space-y-4">
+        <div className="flex items-center space-x-2" role="group">
+          <h1 className="text-4xl font-bold">{agentName}</h1>
+        </div>
+        <p className="text-muted-foreground text-xl">
+          Description: {agent.instructions}
+        </p>
+        <AgentButtonGroup agentId={`${agent.id}`} />
+
+        <hr className="w-2/3" />
+        <div className="flex items-center space-x-2 mt-8" role="group">
+          <AgentAudioSample agentId={`${agent.id}`} />
+        </div>
       </div>
-      <p className="text-muted-foreground text-xl">
-        Description: {agent.instructions}
-      </p>
-      <AgentButtonGroup agentId={`${agent.id}`} />
-      <TestingAudio />
     </>
   );
 }
