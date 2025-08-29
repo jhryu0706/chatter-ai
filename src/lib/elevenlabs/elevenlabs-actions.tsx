@@ -1,7 +1,5 @@
 "use server";
 
-import { db } from "@/db";
-import { voices } from "@/db/schema";
 import { ElevenLabsClient } from "@elevenlabs/elevenlabs-js";
 
 const elevenlabs = new ElevenLabsClient({
@@ -11,7 +9,7 @@ const elevenlabs = new ElevenLabsClient({
 export async function fetchSampleAudio(
   voiceId: string,
   text: string
-): Promise<String> {
+): Promise<string> {
   const stream = await elevenlabs.textToSpeech.convert(voiceId, {
     text,
     modelId: "eleven_multilingual_v2",

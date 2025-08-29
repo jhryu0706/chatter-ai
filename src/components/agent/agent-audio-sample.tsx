@@ -3,7 +3,6 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button"; // Adjust path if needed
 import { fetchOneAgent } from "@/lib/actions/agent-actions";
-import { play } from "@elevenlabs/elevenlabs-js";
 
 type AgentAudioSampleProps = {
   agentId: string;
@@ -28,7 +27,6 @@ export default function AgentAudioSample({ agentId }: AgentAudioSampleProps) {
         if (!sample && attempt < 3) {
           await sleep(1000);
         }
-        console.log("IR: attempt no", attempt);
       }
 
       if (!sample) {
@@ -39,7 +37,7 @@ export default function AgentAudioSample({ agentId }: AgentAudioSampleProps) {
 
       setAudioUrl(sample);
       const audioElement = new Audio(audioUrl!);
-      audioElement.play;
+      audioElement.play();
     } catch (err) {
       console.error("Failed to play audio:", err);
     }

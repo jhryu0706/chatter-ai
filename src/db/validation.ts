@@ -1,5 +1,5 @@
 import {createInsertSchema} from "drizzle-zod"
-import { agents, voices } from "./schema"
+import { agents } from "./schema"
 import { z } from "zod/v4"
 
 export const agentInsertSchemaForUser = createInsertSchema(agents, {

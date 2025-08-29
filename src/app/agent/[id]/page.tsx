@@ -1,13 +1,10 @@
 import AgentButtonGroup from "@/components/agent/agent-button-group";
-import AgentVoiceSample from "@/components/agent/voice-library";
-import TestingAudio from "@/components/agent/agent-audio-sample";
 import { SetBreadcrumb } from "@/components/home/breadcrumb-context";
 import { db } from "@/db";
 import { agents, voices } from "@/db/schema";
 import { eq } from "drizzle-orm";
 import { redirect } from "next/navigation";
 import AgentAudioSample from "@/components/agent/agent-audio-sample";
-import { Separator } from "@radix-ui/react-separator";
 import { Conversation } from "@/components/elevenlabs/conversation";
 
 type PageProps = {

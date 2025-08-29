@@ -1,7 +1,7 @@
 "use server"
 
 import { db } from "@/db/index";
-import { agents, user } from "@/db/schema";
+import { user } from "@/db/schema";
 import { eq } from "drizzle-orm";
 import { cookies } from "next/headers";
 
