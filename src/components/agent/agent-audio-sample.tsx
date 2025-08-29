@@ -50,14 +50,17 @@ export default function AgentAudioSample({ agentId }: AgentAudioSampleProps) {
   return (
     <div className="items-center">
       {!audioUrl && (
-        <Button
-          size="lg"
-          className="font-bold"
-          onClick={handlePlay}
-          disabled={loading}
-        >
-          {loading ? "Loading..." : "Get Sample"}
-        </Button>
+        <div className="space-y-4">
+          <h1 className="text-4xl font-bold">Step 1:</h1>
+          <Button
+            size="lg"
+            className="font-bold text-lg"
+            onClick={handlePlay}
+            disabled={loading}
+          >
+            {loading ? "Loading..." : "Check out sample"}
+          </Button>
+        </div>
       )}
       {audioUrl && (
         <>
