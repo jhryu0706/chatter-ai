@@ -1,4 +1,4 @@
-import { Conversation } from "@/components/eleven/conversation";
+import { Conversation } from "@/components/elevenlabs/conversation";
 import { Button } from "@/components/ui/button";
 import { Card, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";

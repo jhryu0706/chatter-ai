@@ -1,24 +1,55 @@
 "use client";
 
+import { AgentProps } from "@/app/agent/[id]/page";
+import { fetchOneAgent } from "@/lib/actions/agent-actions";
 import { useConversation } from "@elevenlabs/react";
 import { useCallback } from "react";
 
-export function Conversation() {
+type ConversationProps = {
+  agent: AgentProps;
+};
+
+function generateCustomPrompt(instructions: string, intro: string): string {
+  console.log(
+    `IR: customprompt: The user wants to speak to ${instructions}. You have already introduced yourself like this: "${intro}."` +
+      `Now start an engaging conversation that seamlessly follows this introduction.`
+  );
+  return (
+    `The user wants to speak to ${instructions}. You have already introduced yourself as ${intro}` +
+    `so now start an engaging conversation that seamlessly follows this introduction.`
+  );
+}
+
+const getSignedUrl = async (): Promise<string> => {
+  const response = await fetch("/api/get-signed-url");
+  if (!response.ok) {
+    throw new Error(`Failed to get signed url: ${response.statusText}`);
+  }
+  const { signedUrl } = await response.json();
+  return signedUrl;
+};
+
+export function Conversation({ agent }: ConversationProps) {
   const conversation = useConversation({
     onConnect: () => console.log("Connected"),
     onDisconnect: () => console.log("Disconnected"),
     onMessage: (message) => console.log("Message:", message),
     onError: (error) => console.error("Error:", error),
+    overrides: {
+      agent: {
+        prompt: {
+          prompt: generateCustomPrompt(
+            agent.instructions,
+            agent.voiceSampleInstructions!
+          ),
+        },
+        firstMessage: agent.voiceSampleInstructions!,
+      },
+      tts: {
+        voiceId: agent.voiceId,
+      },
+    },
   });
-
-  const getSignedUrl = async (): Promise<string> => {
-    const response = await fetch("/api/get-signed-url");
-    if (!response.ok) {
-      throw new Error(`Failed to get signed url: ${response.statusText}`);
-    }
-    const { signedUrl } = await response.json();
-    return signedUrl;
-  };
 
   const startConversation = useCallback(async () => {
     try {
@@ -61,7 +92,9 @@ export function Conversation() {
 
       <div className="flex flex-col items-center">
         <p>Status: {conversation.status}</p>
-        <p>Agent is {conversation.isSpeaking ? "speaking" : "listening"}</p>
+        {conversation.status === "connected" && (
+          <p>Agent is {conversation.isSpeaking ? "speaking" : "listening"}</p>
+        )}
       </div>
     </div>
   );

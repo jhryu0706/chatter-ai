@@ -8,6 +8,7 @@ import { eq } from "drizzle-orm";
 import { redirect } from "next/navigation";
 import AgentAudioSample from "@/components/agent/agent-audio-sample";
 import { Separator } from "@radix-ui/react-separator";
+import { Conversation } from "@/components/elevenlabs/conversation";
 
 type PageProps = {
   params: {
@@ -15,13 +16,24 @@ type PageProps = {
   };
 };
 
+export type AgentProps = {
+  name: string | null;
+  id: string;
+  instructions: string;
+  voiceId: string;
+  voiceSampleInstructions: string | null;
+  voiceName: string | null;
+};
+
 export default async function AgentPage({ params }: PageProps) {
   const id = params.id;
-  const agent = await db
+  const agent: AgentProps = await db
     .select({
       name: agents.name,
       id: agents.id,
       instructions: agents.instructions,
+      voiceId: agents.voiceId,
+      voiceSampleInstructions: agents.voiceSampleInstructions,
       voiceName: voices.name,
     })
     .from(agents)
@@ -56,6 +68,7 @@ export default async function AgentPage({ params }: PageProps) {
         </dl>
         <AgentButtonGroup agentId={`${agent.id}`} />
 
+        {/* audio sample section */}
         <div
           className="flex items-center space-x-2 mt-8 bg-blue-50 rounded-md p-8 w-4/5"
           role="group"
@@ -63,7 +76,9 @@ export default async function AgentPage({ params }: PageProps) {
           <AgentAudioSample agentId={`${agent.id}`} />
         </div>
 
-        <div className="flex items-center space-x-2 mt-8" role="group"></div>
+        <div className="flex items-center space-x-2 mt-8" role="group">
+          <Conversation agent={agent} />
+        </div>
       </div>
     </>
   );
