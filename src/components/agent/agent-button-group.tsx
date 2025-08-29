@@ -3,9 +3,7 @@
 import { useActionState, useEffect, useState } from "react";
 import { Button } from "../ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
-import { Label } from "../ui/label";
 import { Input } from "../ui/input";
-import { Form } from "../ui/form";
 import { deleteAgent, updateAgentName } from "@/lib/actions/agent-actions";
 import { useRouter } from "next/navigation";
 
@@ -30,7 +28,7 @@ export default function AgentButtonGroup({ agentId }: AgentButtonGroupProps) {
       router.refresh();
     }, 150);
     return () => clearTimeout(timeout);
-  }, [state]);
+  }, [state, router]);
 
   return (
     <div role="group" className="flex items-start gap-2">

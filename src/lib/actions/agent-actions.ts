@@ -1,7 +1,7 @@
 "use server"
 
 import { db } from "@/db/index";
-import { agents, user, voices } from "@/db/schema";
+import { agents, voices } from "@/db/schema";
 import { getSessionFromCookies } from "../sessionStore";
 import { agentInsertSchemaForUser, agentNameUpdateSchemaForUser } from "@/db/validation";
 import { desc, eq } from "drizzle-orm";
@@ -43,7 +43,6 @@ export async function createNewAgent(prev: State, form: FormData): Promise<State
         }).returning({
             id:agents.id
         })
-        console.log("IR: inserted", inserted)
 
         const insertedId = inserted[0].id
 
@@ -63,7 +62,10 @@ export async function createNewAgent(prev: State, form: FormData): Promise<State
   }
 
   export async function updateAgentName(prev: State, form:FormData): Promise<State> {
-    const newName = form.get("newName")
+    const newName = form.get("newName")?.toString() ?? "";
+    const agentId = form.get("agentId")?.toString() ?? "";
+
+    if (!newName || !agentId) throw new Error("Missing form fields");
 
     const result = agentNameUpdateSchemaForUser.safeParse({name:newName})
     if (!result.success) {
@@ -79,7 +81,7 @@ export async function createNewAgent(prev: State, form: FormData): Promise<State
         .set({
             name:result.data.name
         })
-        .where(eq(agents.id!,form.get("agentId")?.toString()!))
+        .where(eq(agents.id!,agentId!))
     } catch(err) {
         console.error("Error inserting agent to DB: ", err)
         return {success:false, error:"Error inserting agent to DB"}
@@ -93,6 +95,7 @@ export async function createNewAgent(prev: State, form: FormData): Promise<State
     try {
         await db.delete(agents).where(eq(agents.id!, id!))
     } catch(err) {
+        console.log(err)
         return {success:false, error: "Error deleting agent."}
     }
     return {success:true, message:"Successfully deleted agent"}

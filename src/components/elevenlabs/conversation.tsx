@@ -1,7 +1,6 @@
 "use client";
 
 import { AgentProps } from "@/app/agent/[id]/page";
-import { fetchOneAgent } from "@/lib/actions/agent-actions";
 import { useConversation } from "@elevenlabs/react";
 import { useCallback } from "react";
 
@@ -10,10 +9,6 @@ type ConversationProps = {
 };
 
 function generateCustomPrompt(instructions: string, intro: string): string {
-  console.log(
-    `IR: customprompt: The user wants to speak to ${instructions}. You have already introduced yourself like this: "${intro}."` +
-      `Now start an engaging conversation that seamlessly follows this introduction.`
-  );
   return (
     `The user wants to speak to ${instructions}. You have already introduced yourself as ${intro}` +
     `so now start an engaging conversation that seamlessly follows this introduction.`

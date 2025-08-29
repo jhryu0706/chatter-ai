@@ -2,7 +2,6 @@
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 import { createNewAgent } from "@/lib/actions/agent-actions";
 import { useRouter } from "next/navigation";
 import { useActionState, useEffect } from "react";

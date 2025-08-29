@@ -1,18 +1,16 @@
 import {
   Sidebar,
   SidebarContent,
-  SidebarFooter,
   SidebarGroup,
   SidebarGroupContent,
   SidebarGroupLabel,
-  SidebarHeader,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarSeparator,
 } from "@/components/ui/sidebar";
 import { fetchAgents } from "@/lib/actions/agent-actions";
-import { group } from "node:console";
+import Link from "next/link";
 
 export async function AppSidebar() {
   const agents = await fetchAgents();
@@ -39,11 +37,11 @@ export async function AppSidebar() {
                   asChild
                   className={sidebarStyles.sidebarMenuButton}
                 >
-                  <a href="/" className={sidebarStyles.sidebarA}>
+                  <Link href="/" className={sidebarStyles.sidebarA}>
                     <span className={sidebarStyles.siebarHeader}>
                       Create an Agent
                     </span>
-                  </a>
+                  </Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>
               <SidebarMenuItem key="resource-page">
