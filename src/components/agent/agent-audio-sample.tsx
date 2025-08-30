@@ -49,10 +49,9 @@ export default function AgentAudioSample({ agentId }: AgentAudioSampleProps) {
     <div className="items-center">
       {!audioUrl && (
         <div className="space-y-4">
-          <h1 className="text-4xl font-bold">Step 1:</h1>
           <Button
-            size="lg"
-            className="font-bold text-lg"
+            variant="secondary"
+            className="hover:bg-amber-300"
             onClick={handlePlay}
             disabled={loading}
           >
@@ -62,8 +61,10 @@ export default function AgentAudioSample({ agentId }: AgentAudioSampleProps) {
       )}
       {audioUrl && (
         <>
-          <h1 className="text-4xl font-bold">Sample:</h1>
-          <audio src={audioUrl} controls className="mt-4" />
+          <dt className="font-medium text-gray-500 text-muted-foreground">
+            Hello from Agent:
+          </dt>
+          <audio className="justify-center mt-2" src={audioUrl} controls />
         </>
       )}
     </div>

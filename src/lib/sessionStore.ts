@@ -17,7 +17,7 @@ export async function requireSid() {
   return sid
 }
 
-export async function getOrCreateUser(sid: string) {
+export async function getOrCreateUserInDB(sid: string) {
   const existing = await db
   .select()
   .from(user)
@@ -31,7 +31,7 @@ export async function getOrCreateUser(sid: string) {
   }
 }
 
-export async function loadOrInitSession() {
+export async function loadOrInitSessionAuth() {
   const sid = await requireSid()
-  await getOrCreateUser(sid!);
+  await getOrCreateUserInDB(sid!);
 }
