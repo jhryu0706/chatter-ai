@@ -5,7 +5,7 @@ import { agents, voices } from "@/db/schema";
 import { eq } from "drizzle-orm";
 import { redirect } from "next/navigation";
 import AgentAudioSample from "@/components/agent/agent-audio-sample";
-import { Conversation } from "@/components/elevenlabs/conversation";
+import { Conversation } from "@/components/audio/conversation";
 
 type PageProps = {
   params: {
