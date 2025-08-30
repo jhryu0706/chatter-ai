@@ -46,35 +46,39 @@ export default async function AgentPage({ params }: PageProps) {
 
   return (
     <>
+      {/* setting breadcrumb */}
       <SetBreadcrumb label={agentNameCleaned} href={`/agent/${agent.id}`} />
+
+      {/* agent name and some options (edit, delete) */}
       <div className="space-y-4">
         <div className="flex items-center space-x-2" role="group">
           <h1 className="text-4xl font-bold">{agentNameCleaned}</h1>
         </div>
-        {/* brief description of agent */}
-        <dl className="grid grid-cols-1 gap-y-2 text-lg text-muted-foreground">
-          <div className="flex gap-2">
-            <dt className="font-medium text-gray-500">Description:</dt>
-            <dd>{agent.instructions}</dd>
-          </div>
-
-          <div className="flex gap-2">
-            <dt className="font-medium text-gray-500">Voice by:</dt>
-            <dd>{agent.voiceName ?? "—"}</dd>
-          </div>
-        </dl>
         <AgentButtonGroup agentId={`${agent.id}`} />
+      </div>
 
-        {/* audio sample section */}
-        <div
-          className="flex items-center space-x-2 mt-8 bg-blue-50 rounded-md p-8 w-4/5"
-          role="group"
-        >
-          <AgentAudioSample agentId={`${agent.id}`} />
+      <div className="mt-12 flex divide-x divide-gray-300">
+        {/* Information section */}
+        <div className="flex-1 pr-4 basis-1/3">
+          <h1 className="text-2xl font-bold mb-4">Information</h1>
+          <dl className="grid grid-cols-1 gap-y-2 text-lg text-muted-foreground">
+            <div className="flex gap-2">
+              <dt className="font-medium text-gray-500">Description:</dt>
+              <dd>{agent.instructions}</dd>
+            </div>
+            <div className="flex gap-2">
+              <dt className="font-medium text-gray-500">Voice by:</dt>
+              <dd>{agent.voiceName ?? "—"}</dd>
+            </div>
+            <AgentAudioSample agentId={agent.id} />
+          </dl>
         </div>
 
-        <div className="flex items-center space-x-2 mt-8" role="group">
-          <Conversation agent={agent} />
+        {/* Ring-ring! section */}
+        <div className="flex basis-2/3 items-center justify-center">
+          <div className="flex items-center space-x-2 mt-4" role="group">
+            <Conversation agent={agent} />
+          </div>
         </div>
       </div>
     </>

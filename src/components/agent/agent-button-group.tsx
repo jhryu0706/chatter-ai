@@ -30,11 +30,16 @@ export default function AgentButtonGroup({ agentId }: AgentButtonGroupProps) {
     return () => clearTimeout(timeout);
   }, [state, router]);
 
+  const buttonVariant = "outline";
+  const buttonSize = "sm";
+
   return (
     <div role="group" className="flex items-start gap-2">
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
-          <Button variant="secondary">Edit Name</Button>
+          <Button variant={buttonVariant} size={buttonSize}>
+            Edit Name
+          </Button>
         </PopoverTrigger>
         <PopoverContent>
           <div className="grid gap-4">
@@ -68,7 +73,9 @@ export default function AgentButtonGroup({ agentId }: AgentButtonGroupProps) {
       </Popover>
       <Popover open={delOpen} onOpenChange={setDelOpen}>
         <PopoverTrigger asChild>
-          <Button variant="secondary">Delete</Button>
+          <Button variant={buttonVariant} size={buttonSize}>
+            Delete
+          </Button>
         </PopoverTrigger>
         <PopoverContent>
           <div className="grid gap-4">

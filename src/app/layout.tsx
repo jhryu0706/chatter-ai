@@ -6,6 +6,7 @@ import {
   BreadcrumbProvider,
   LayoutShell,
 } from "@/components/home/breadcrumb-context";
+import { loadOrInitSessionAuth } from "@/lib/sessionStore";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -13,11 +14,12 @@ const inter = Inter({
   display: "swap",
 });
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  await loadOrInitSessionAuth();
   return (
     <html lang="en">
       <body className={`${inter.variable} font-sans antialiased`}>
