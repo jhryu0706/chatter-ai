@@ -38,7 +38,6 @@ export function Conversation({ agent }: ConversationProps) {
             agent.voiceSampleInstructions!
           ),
         },
-        firstMessage: agent.voiceSampleInstructions!,
       },
       tts: {
         voiceId: agent.voiceId,
