@@ -78,16 +78,6 @@ export function Conversation({ agent }: ConversationProps) {
       await conversation.startSession({
         signedUrl,
         connectionType: "websocket",
-        inputDeviceId: selectedDeviceId,
-        constraints: {
-          audio: {
-            deviceId: selectedDeviceId
-              ? { exact: selectedDeviceId }
-              : undefined,
-            ...MIC_CONSTRAINTS,
-          },
-        },
-        mediaStream: micStream,
       });
     } catch (error) {
       console.error("Failed to start conversation:", error);
