@@ -78,11 +78,12 @@ export function Conversation({ agent }: ConversationProps) {
   }, [conversation]);
 
   return (
-    <div className="flex flex-col items-center gap-4">
-      <div className="flex flex-col items-center underline underline-offset-2 mb-4">
-        <p>Status: {conversation.status}</p>
-        {isConnected && (
-          <p>Agent is {conversation.isSpeaking ? "Speaking" : "Listening"}</p>
+    <div className="flex flex-col items-center *:font-medium">
+      <div className="flex flex-col items-center  mb-4">
+        {isConnected ? (
+          <p>Agent is {conversation.isSpeaking ? "speaking" : "listening"}.</p>
+        ) : (
+          <p>Agent is not here yet.</p>
         )}
       </div>
       <div>
@@ -94,6 +95,9 @@ export function Conversation({ agent }: ConversationProps) {
           priority
         />
       </div>
+      <p className="underline underline-offset-3 mb-4">
+        Status: {conversation.status}
+      </p>
 
       <div className="flex gap-2">
         <Button
