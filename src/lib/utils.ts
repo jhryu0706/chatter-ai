@@ -28,9 +28,9 @@ export interface PostCallTranscriptionEvent {
     transcript: {
       role: "agent" | "user";
       message: string;
-      tool_calls: any;
-      tool_results: any;
-      feedback: any;
+      tool_calls: unknown;
+      tool_results: unknown;
+      feedback: unknown;
       time_in_call_secs: number;
       conversation_turn_metrics: {
         convai_llm_service_ttfb?: { elapsed_time: number };
@@ -61,8 +61,8 @@ export interface PostCallTranscriptionEvent {
       termination_reason: string;
     };
     analysis: {
-      evaluation_criteria_results: Record<string, any>;
-      data_collection_results: Record<string, any>;
+      evaluation_criteria_results: Record<string, unknown>;
+      data_collection_results: Record<string, unknown>;
       call_successful: string;
       transcript_summary: string;
     };
@@ -77,7 +77,7 @@ export interface PostCallTranscriptionEvent {
           voice_id: string | null;
         };
       };
-      custom_llm_extra_body: Record<string, any>;
+      custom_llm_extra_body: Record<string, unknown>;
       dynamic_variables: {
         user_name: string;
       };

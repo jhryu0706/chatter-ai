@@ -6,7 +6,6 @@ import { useConversation } from "@elevenlabs/react";
 import { useCallback } from "react";
 import { Button } from "../ui/button";
 import { inngest } from "@/inngest/client";
-import { getSessionFromCookies } from "@/lib/sessionStore";
 
 type ConversationProps = { agent: AgentProps };
 

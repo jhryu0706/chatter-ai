@@ -23,7 +23,7 @@ export async function POST(req: NextRequest) {
   }
 
   if (!event) {
-    return;
+    return NextResponse.json({ error: "No event received." }, { status: 404 });
   }
 
   if (event.type === "post_call_transcription") {
@@ -33,10 +33,8 @@ export async function POST(req: NextRequest) {
     console.log("audio event data", JSON.stringify(event, null, 2));
     handleAudio(event);
   } else {
-    console.log("Error: event type not recognized,");
-    return;
+    return NextResponse.json({ error: "Unknown event type" }, { status: 400 });
   }
-
   return NextResponse.json({ received: true }, { status: 200 });
 }
 

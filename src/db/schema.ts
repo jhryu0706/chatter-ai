@@ -1,4 +1,4 @@
-import { pgTable, text,boolean,timestamp, pgEnum, integer } from "drizzle-orm/pg-core";
+import { pgTable, text,boolean,timestamp, integer } from "drizzle-orm/pg-core";
 import { ulid } from "ulid";
 
 // user tables
