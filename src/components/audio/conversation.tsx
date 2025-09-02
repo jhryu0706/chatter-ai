@@ -5,6 +5,8 @@ import { AgentProps } from "@/app/agent/[id]/page";
 import { useConversation } from "@elevenlabs/react";
 import { useCallback } from "react";
 import { Button } from "../ui/button";
+import { inngest } from "@/inngest/client";
+import { getSessionFromCookies } from "@/lib/sessionStore";
 
 type ConversationProps = { agent: AgentProps };
 
@@ -27,7 +29,7 @@ export function Conversation({ agent }: ConversationProps) {
             agent.instructions
           }. You have already introduced yourself as "${
             agent.voiceSampleInstructions ?? ""
-          }" so keep the intro short. Start with one suggestion for a specific topic then pass it on to the user. Be strictly concise and straight to the point. No long sentences allowed. Do NOT over explain under any circumstances.`,
+          }" so no need for an intro. Start with a question to the user. Be strictly concise and straight to the point. No long sentences allowed. Do NOT over-explain unless the user explicitly asks for detail.`,
         },
       },
       tts: { voiceId: agent.voiceId },
@@ -65,6 +67,15 @@ export function Conversation({ agent }: ConversationProps) {
         signedUrl,
         connectionType: "websocket",
       });
+      const convId = await conversation.getId();
+
+      inngest.send({
+        name: "conversation/created",
+        data: {
+          agentId: agent.id,
+          conversationId: convId,
+        },
+      });
     } catch (error) {
       console.error("Failed to start conversation:", error);
     } finally {
@@ -82,7 +93,7 @@ export function Conversation({ agent }: ConversationProps) {
         {isConnected ? (
           <p>Agent is {conversation.isSpeaking ? "speaking" : "listening"}.</p>
         ) : (
-          <p>Agent is not here yet.</p>
+          <p>Agent is not here.</p>
         )}
       </div>
       <div>

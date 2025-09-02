@@ -1,9 +1,11 @@
 import {createAgent, openai, TextMessage} from "@inngest/agent-kit"
 import { inngest } from "./client";
 import { db } from "@/db";
-import { agents } from "@/db/schema";
+import { agents, conversation } from "@/db/schema";
 import { eq } from "drizzle-orm";
 import { fetchSampleAudio } from "@/lib/elevenlabs/elevenlabs-actions";
+import { getSessionFromCookies } from "@/lib/sessionStore";
+import { conversationInsertSchema } from "@/db/validation";
 
 const nameGeneratorAgent = createAgent({
   name: "Name Generator",
@@ -45,4 +47,32 @@ export const generateSampleAudio = inngest.createFunction(
     } 
     return true
   }
+)
+
+ export const createNewConversation = inngest.createFunction(
+  {id: "create-new-conv"},
+  {event: "converstation/created"},
+  async({event}) => {
+    const {agentId, conversationId} = event.data.conversationId
+    const userId = await getSessionFromCookies()
+
+    const result = conversationInsertSchema.safeParse({
+      id: conversationId,
+      userId,
+      agentId
+    })
+
+    if (!result.success) {
+      console.error("Failed to add new conversation to database: ", result.error)
+      return;
+    }
+
+    try {
+      await db
+      .insert(conversation).values(result.data)
+    } catch(err) {
+      return false
+    }
+    return true
+  }  
 )

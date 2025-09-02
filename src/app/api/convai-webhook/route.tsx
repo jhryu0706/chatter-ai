@@ -1,6 +1,15 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import crypto from "crypto";
+import { transcriptInsertSchema } from "@/db/validation";
+import { db } from "@/db";
+import { conversation } from "@/db/schema";
+import { eq } from "drizzle-orm";
+import {
+  PostCallAudioEvent,
+  PostCallTranscriptionEvent,
+  WebhookEvent,
+} from "@/lib/utils";
 
 export async function GET() {
   return NextResponse.json({ status: "webhook listening" }, { status: 200 });
@@ -13,12 +22,19 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: error }, { status: 401 });
   }
 
-  if (event.type === "post_call_transcription") {
-    console.log("transcript event data", JSON.stringify(event.data, null, 2));
+  if (!event) {
+    return;
   }
 
-  if (event.type === "post_call_audio") {
-    console.log("audio event data", JSON.stringify(event.data, null, 2));
+  if (event.type === "post_call_transcription") {
+    console.log("transcript event data", JSON.stringify(event, null, 2));
+    handleTranscript(event);
+  } else if (event.type === "post_call_audio") {
+    console.log("audio event data", JSON.stringify(event, null, 2));
+    handleAudio(event);
+  } else {
+    console.log("Error: event type not recognized,");
+    return;
   }
 
   return NextResponse.json({ received: true }, { status: 200 });
@@ -27,7 +43,8 @@ export async function POST(req: NextRequest) {
 const constructWebhookEvent = async (req: NextRequest, secret?: string) => {
   const body = await req.text();
   const signature_header = req.headers.get("ElevenLabs-Signature");
-  console.log(signature_header);
+
+  console.log("Recieved signature header: ", signature_header);
 
   if (!signature_header) {
     return { event: null, error: "Missing signature header" };
@@ -62,6 +79,53 @@ const constructWebhookEvent = async (req: NextRequest, secret?: string) => {
     return { event: null, error: "Invalid signature" };
   }
 
-  const event = JSON.parse(body);
+  const event = JSON.parse(body) as WebhookEvent;
   return { event, error: null };
 };
+
+async function handleTranscript(event: PostCallTranscriptionEvent) {
+  const conversationId = event.data.conversation_id;
+  const startTimeUNIX = event.event_timestamp;
+  const durationSeconds = event.data.metadata.call_duration_secs;
+
+  const result = transcriptInsertSchema.safeParse({
+    id: conversationId,
+    startTimeUNIX,
+    durationSeconds,
+  });
+
+  if (!result.success) {
+    console.log("Failed to save transcript due to this error: ", result.error);
+    return;
+  }
+
+  try {
+    await db
+      .update(conversation)
+      .set({
+        startTimeUNIX,
+        durationSeconds,
+      })
+      .where(eq(conversation.id, conversationId));
+  } catch (err) {
+    console.error("Failed to save transcript due to this error: ", err);
+    return;
+  }
+  return;
+}
+
+async function handleAudio(event: PostCallAudioEvent) {
+  const conversationId = event.data.conversation_id;
+  try {
+    await db
+      .update(conversation)
+      .set({
+        recording: event.data.full_audio,
+      })
+      .where(eq(conversation.id, conversationId));
+  } catch (err) {
+    console.error("Failed to save audio due to this error: ", err);
+    return;
+  }
+  return;
+}

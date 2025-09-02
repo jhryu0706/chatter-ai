@@ -1,5 +1,5 @@
 import {createInsertSchema} from "drizzle-zod"
-import { agents } from "./schema"
+import { agents, conversation} from "./schema"
 import { z } from "zod/v4"
 
 export const agentInsertSchemaForUser = createInsertSchema(agents, {
@@ -18,4 +18,26 @@ export const agentNameUpdateSchemaForUser = createInsertSchema(agents, {
 })
 .pick({
     name:true
+})
+
+export const transcriptInsertSchema = createInsertSchema(conversation, {
+    id: z.string().min(1),
+    durationSeconds: z.coerce.number().optional(),
+    startTimeUNIX: z.coerce.number().optional()
+})
+.pick({
+    id:true,
+    durationSeconds:true,
+    startTimeUNIX:true
+})
+
+export const conversationInsertSchema = createInsertSchema(conversation, {
+    id: z.string().min(1),
+    userId: z.string().min(1),
+    agentId: z.string().min(1)
+})
+.pick({
+    id: true,
+    userId:true,
+    agentId:true
 })
