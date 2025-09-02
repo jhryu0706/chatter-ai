@@ -27,7 +27,9 @@ export default function AgentForm() {
           placeholder="Type anything"
           className="flex-1 border-0 shadow-none focus-visible:ring-0 focus-visible:ring-offset-0"
         />
-        <Button disabled={isPending}>Generate</Button>
+        <Button className="font-bold bg-black" disabled={isPending}>
+          Generate
+        </Button>
       </form>
       {state.message || state.error ? <div>{JSON.stringify(state)}</div> : null}
     </>

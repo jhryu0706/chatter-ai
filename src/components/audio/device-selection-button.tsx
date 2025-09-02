@@ -1,6 +1,5 @@
 "use client";
 
-import * as React from "react";
 import { Button } from "@/components/ui/button";
 import {
   Popover,
@@ -17,6 +16,7 @@ import {
   CommandSeparator,
 } from "@/components/ui/command";
 import { Check, ChevronDown, RefreshCw, Mic } from "lucide-react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 
 type DeviceRow = {
   deviceId: string;
@@ -32,12 +32,12 @@ export function DeviceSelectButton({
   onSelect: (id?: string) => void;
   disabled?: boolean;
 }) {
-  const [open, setOpen] = React.useState(false);
-  const [devices, setDevices] = React.useState<DeviceRow[]>([]);
-  const [loading, setLoading] = React.useState(false);
-  const [error, setError] = React.useState<string | null>(null);
+  const [open, setOpen] = useState(false);
+  const [devices, setDevices] = useState<DeviceRow[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  const selectedLabel = React.useMemo(() => {
+  const selectedLabel = useMemo(() => {
     if (!selectedId) return "Default Microphone";
     return (
       devices.find((d) => d.deviceId === selectedId)?.label ??
@@ -45,7 +45,7 @@ export function DeviceSelectButton({
     );
   }, [devices, selectedId]);
 
-  const refresh = React.useCallback(async () => {
+  const refresh = useCallback(async () => {
     setLoading(true);
     setError(null);
     try {
@@ -53,9 +53,7 @@ export function DeviceSelectButton({
       try {
         const s = await navigator.mediaDevices.getUserMedia({ audio: true });
         s.getTracks().forEach((t) => t.stop());
-      } catch {
-        // user may decline; we can still list devices (labels may be blank)
-      }
+      } catch {}
       const list = await navigator.mediaDevices.enumerateDevices();
       const micInputs = list
         .filter(
@@ -75,7 +73,7 @@ export function DeviceSelectButton({
   }, []);
 
   // Initial load and keep up-to-date on plug/unplug
-  React.useEffect(() => {
+  useEffect(() => {
     refresh();
     const onChange = () => refresh();
     navigator.mediaDevices.addEventListener("devicechange", onChange);
@@ -99,22 +97,7 @@ export function DeviceSelectButton({
       </PopoverTrigger>
 
       <PopoverContent className="w-80 p-0" align="start">
-        <Command shouldFilter={true}>
-          <div className="flex items-center gap-2 p-2">
-            <CommandInput placeholder="Search microphones..." />
-            <Button
-              size="icon"
-              variant="ghost"
-              onClick={refresh}
-              title="Refresh"
-              className="ml-auto"
-            >
-              <RefreshCw
-                className={`h-4 w-4 ${loading ? "animate-spin" : ""}`}
-              />
-            </Button>
-          </div>
-
+        <Command>
           <CommandList>
             <CommandEmpty>No microphones found</CommandEmpty>
 

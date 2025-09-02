@@ -50,8 +50,7 @@ export default function AgentAudioSample({ agentId }: AgentAudioSampleProps) {
       {!audioUrl && (
         <div className="space-y-4">
           <Button
-            variant="secondary"
-            className="hover:bg-amber-300"
+            className="bg-amber-300 text-black btn-inset"
             onClick={handlePlay}
             disabled={loading}
           >

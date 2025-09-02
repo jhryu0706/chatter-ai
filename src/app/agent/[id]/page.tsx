@@ -57,29 +57,34 @@ export default async function AgentPage({ params }: PageProps) {
         <AgentButtonGroup agentId={`${agent.id}`} />
       </div>
 
-      <div className="mt-12 flex divide-x divide-gray-300">
-        {/* Information section */}
-        <div className="flex-1 pr-4 basis-1/3">
-          <h1 className="text-2xl font-bold mb-4">Information</h1>
-          <dl className="grid grid-cols-1 gap-y-2 text-lg text-muted-foreground">
-            <div className="flex gap-2">
-              <dt className="font-medium text-gray-500">Description:</dt>
-              <dd>{agent.instructions}</dd>
+      <div className="flex-row justify-center">
+        <dl>
+          <div className="rounded-sm bg-accent p-4 flex-col mb-20">
+            <dt className="font-bold text-gray-500">Voice by:</dt>
+            <dd>{agent.voiceName ?? "—"}</dd>
+            <dt className="font-bold text-gray-500">Description:</dt>
+            <dd>{agent.instructions}</dd>
+          </div>
+        </dl>
+
+        <div className="flex">
+          <div className="mx-auto sm:flex-row md:flex items-center gap-6">
+            <div className="w-[22vmax] aspect-square bg-red-500/30 hover:bg-red-500 transition-colors duration-200 flex flex-col justify-end p-6 text-white font-extrabold">
+              <h1 className=" text-3xl text-white">Step 1:</h1>
+              <p className="text-xl">Check Sample</p>
             </div>
-            <div className="flex gap-2">
-              <dt className="font-medium text-gray-500">Voice by:</dt>
-              <dd>{agent.voiceName ?? "—"}</dd>
-            </div>
-            <AgentAudioSample agentId={agent.id} />
-          </dl>
+            <div className="w-[22vmax] aspect-square bg-blue-600/30 hover:bg-blue-600 transition-colors duration-200" />
+            <div className="w-[22vmax] aspect-square bg-yellow-300/30 hover:bg-yellow-300 transition-colors duration-200" />
+          </div>
         </div>
 
-        {/* Ring-ring! section */}
-        <div className="flex basis-2/3 items-center justify-center">
+        {/* <h1 className="text-2xl font-bold">Do this first:</h1>
+        <AgentAudioSample agentId={agent.id} />
+        <div className="flex items-center justify-center">
           <div className="flex items-center space-x-2 mt-4" role="group">
             <Conversation agent={agent} />
           </div>
-        </div>
+        </div> */}
       </div>
     </>
   );

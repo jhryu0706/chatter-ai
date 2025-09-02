@@ -16,19 +16,6 @@ const MIC_CONSTRAINTS: MediaTrackConstraints = {
 };
 
 export function Conversation({ agent }: ConversationProps) {
-  const [selectedDeviceId, setSelectedDeviceId] = useState<string | undefined>(
-    () =>
-      typeof window === "undefined"
-        ? undefined
-        : localStorage.getItem("selectedMicId") || undefined
-  );
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-    if (selectedDeviceId)
-      localStorage.setItem("selectedMicId", selectedDeviceId);
-    else localStorage.removeItem("selectedMicId");
-  }, [selectedDeviceId]);
-
   const conversation = useConversation({
     onConnect: () => console.log("Connected"),
     onDisconnect: () => console.log("Disconnected"),
@@ -41,23 +28,19 @@ export function Conversation({ agent }: ConversationProps) {
             agent.instructions
           }. You have already introduced yourself as ${
             agent.voiceSampleInstructions ?? ""
-          } so keep the intro short. Start by providing a couple well thought out suggestions for where this conversation can go.`,
+          } so keep the intro short. Start with one suggestion for a specific topic then pass it on to the user. Be strictly concise and straight to the point. No long sentences allowed.`,
         },
       },
       tts: { voiceId: agent.voiceId },
     },
   });
 
-  const ensureMicForDevice = useCallback(async (deviceId?: string) => {
+  const getMic = useCallback(async () => {
     return navigator.mediaDevices.getUserMedia({
-      audio: {
-        deviceId: deviceId ? { exact: deviceId } : undefined,
-        ...MIC_CONSTRAINTS,
-      },
+      audio: { ...MIC_CONSTRAINTS },
     });
   }, []);
 
-  // ---- IMAGE TOGGLE STATE ----
   const isConnected = conversation.status === "connected";
 
   const getSignedUrl = async (): Promise<string> => {
@@ -73,7 +56,11 @@ export function Conversation({ agent }: ConversationProps) {
   const startConversation = useCallback(async () => {
     let micStream: MediaStream | null = null;
     try {
-      micStream = await ensureMicForDevice(selectedDeviceId);
+      micStream = await getMic();
+      console.log(
+        "IR: checking micStream",
+        micStream.getAudioTracks()[0].getSettings()
+      );
       const signedUrl = await getSignedUrl();
       await conversation.startSession({
         signedUrl,
@@ -84,7 +71,7 @@ export function Conversation({ agent }: ConversationProps) {
     } finally {
       micStream?.getTracks().forEach((t) => t.stop());
     }
-  }, [conversation, selectedDeviceId, ensureMicForDevice]);
+  }, [conversation]);
 
   const stopConversation = useCallback(async () => {
     await conversation.endSession();
@@ -92,12 +79,6 @@ export function Conversation({ agent }: ConversationProps) {
 
   return (
     <div className="flex flex-col items-center gap-4">
-      <DeviceSelectButton
-        selectedId={selectedDeviceId}
-        onSelect={setSelectedDeviceId}
-        disabled={isConnected}
-      />
-
       <div>
         <Image
           src={"/off-call-phone.png"}
