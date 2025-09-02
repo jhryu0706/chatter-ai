@@ -6,6 +6,7 @@ import { eq } from "drizzle-orm";
 import { redirect } from "next/navigation";
 import AgentAudioSample from "@/components/agent/agent-audio-sample";
 import { Conversation } from "@/components/audio/conversation";
+import ColorCard from "@/components/agent/color-card";
 
 type PageProps = {
   params: {
@@ -69,22 +70,25 @@ export default async function AgentPage({ params }: PageProps) {
 
         <div className="flex">
           <div className="mx-auto sm:flex-row md:flex items-center gap-6">
-            <div className="w-[22vmax] aspect-square bg-red-500/30 hover:bg-red-500 transition-colors duration-200 flex flex-col justify-end p-6 text-white font-extrabold">
-              <h1 className=" text-3xl text-white">Step 1:</h1>
-              <p className="text-xl">Check Sample</p>
-            </div>
-            <div className="w-[22vmax] aspect-square bg-blue-600/30 hover:bg-blue-600 transition-colors duration-200" />
-            <div className="w-[22vmax] aspect-square bg-yellow-300/30 hover:bg-yellow-300 transition-colors duration-200" />
+            <ColorCard
+              color="bg-red-500"
+              cardHeader="Step 1:"
+              cardDescription="Check sample."
+              backContent={<AgentAudioSample agentId={agent.id} />}
+            />
+            <ColorCard
+              color="bg-blue-600"
+              cardHeader="Step 2:"
+              cardDescription="Call agent."
+              backContent={<Conversation agent={agent} />}
+            />
+            <ColorCard
+              color="bg-yellow-300"
+              cardHeader="Step 3:"
+              cardDescription="Browse call history."
+            />
           </div>
         </div>
-
-        {/* <h1 className="text-2xl font-bold">Do this first:</h1>
-        <AgentAudioSample agentId={agent.id} />
-        <div className="flex items-center justify-center">
-          <div className="flex items-center space-x-2 mt-4" role="group">
-            <Conversation agent={agent} />
-          </div>
-        </div> */}
       </div>
     </>
   );

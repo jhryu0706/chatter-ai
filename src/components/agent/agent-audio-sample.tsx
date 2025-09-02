@@ -46,25 +46,28 @@ export default function AgentAudioSample({ agentId }: AgentAudioSampleProps) {
   };
 
   return (
-    <div className="items-center">
+    <div className="flex flex-col items-center justify-center w-full h-full text-center">
       {!audioUrl && (
         <div className="space-y-4">
           <Button
-            className="bg-amber-300 text-black btn-inset"
+            className="text-lg"
+            variant="link"
             onClick={handlePlay}
             disabled={loading}
           >
-            {loading ? "Loading..." : "Check out sample"}
+            {loading ? "Loading..." : "Generate Sample"}
           </Button>
         </div>
       )}
       {audioUrl && (
-        <>
-          <dt className="font-medium text-gray-500 text-muted-foreground">
-            Hello from Agent:
-          </dt>
-          <audio className="justify-center mt-2" src={audioUrl} controls />
-        </>
+        <div className="w-full max-w-sm">
+          <dt className="font-medium">Hello from Agent:</dt>
+          <audio
+            className="justify-center mt-2 w-full"
+            src={audioUrl}
+            controls
+          />
+        </div>
       )}
     </div>
   );

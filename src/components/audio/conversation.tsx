@@ -79,6 +79,12 @@ export function Conversation({ agent }: ConversationProps) {
 
   return (
     <div className="flex flex-col items-center gap-4">
+      <div className="flex flex-col items-center underline underline-offset-2 mb-4">
+        <p>Status: {conversation.status}</p>
+        {isConnected && (
+          <p>Agent is {conversation.isSpeaking ? "Speaking" : "Listening"}</p>
+        )}
+      </div>
       <div>
         <Image
           src={"/off-call-phone.png"}
@@ -94,9 +100,9 @@ export function Conversation({ agent }: ConversationProps) {
           variant="custom"
           onClick={startConversation}
           disabled={isConnected}
-          className="px-4 py-2 text-white rounded disabled:bg-gray-300 bg-primary"
+          className="px-4 py-2 text-white rounded disabled:bg-gray-300 bg-black"
         >
-          Start Conversation
+          Start Call
         </Button>
         <Button
           variant="custom"
@@ -104,15 +110,8 @@ export function Conversation({ agent }: ConversationProps) {
           disabled={!isConnected}
           className="px-4 py-2 bg-red-500 text-white disabled:bg-gray-300"
         >
-          Stop Conversation
+          Stop Call
         </Button>
-      </div>
-
-      <div className="flex flex-col items-center">
-        <p>Status: {conversation.status}</p>
-        {isConnected && (
-          <p>Agent is {conversation.isSpeaking ? "speaking" : "listening"}</p>
-        )}
       </div>
     </div>
   );
