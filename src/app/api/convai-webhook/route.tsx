@@ -14,7 +14,11 @@ export async function POST(req: NextRequest) {
   }
 
   if (event.type === "post_call_transcription") {
-    console.log("event data", JSON.stringify(event.data, null, 2));
+    console.log("transcript event data", JSON.stringify(event.data, null, 2));
+  }
+
+  if (event.type === "post_call_audio") {
+    console.log("audio event data", JSON.stringify(event.data, null, 2));
   }
 
   return NextResponse.json({ received: true }, { status: 200 });
