@@ -25,9 +25,9 @@ export function Conversation({ agent }: ConversationProps) {
         prompt: {
           prompt: `The user wants to speak to ${
             agent.instructions
-          }. You have already introduced yourself as ${
+          }. You have already introduced yourself as "${
             agent.voiceSampleInstructions ?? ""
-          } so keep the intro short. Start with one suggestion for a specific topic then pass it on to the user. Be strictly concise and straight to the point. No long sentences allowed.`,
+          }" so keep the intro short. Start with one suggestion for a specific topic then pass it on to the user. Be strictly concise and straight to the point. No long sentences allowed. Do NOT over explain under any circumstances.`,
         },
       },
       tts: { voiceId: agent.voiceId },
