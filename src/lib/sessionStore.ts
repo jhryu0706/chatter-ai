@@ -12,7 +12,7 @@ export async function getSessionFromCookies() {
 }
 
 export async function requireSid() {
-  const sid = getSessionFromCookies()
+  const sid = await getSessionFromCookies()
   if (!sid) throw new Error("Unauthorized: Missing session identifier.");
   return sid
 }
