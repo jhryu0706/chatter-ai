@@ -10,12 +10,11 @@ import {
   Command,
   CommandEmpty,
   CommandGroup,
-  CommandInput,
   CommandItem,
   CommandList,
   CommandSeparator,
 } from "@/components/ui/command";
-import { Check, ChevronDown, RefreshCw, Mic } from "lucide-react";
+import { Check, ChevronDown, Mic } from "lucide-react";
 import { useCallback, useEffect, useMemo, useState } from "react";
 
 type DeviceRow = {

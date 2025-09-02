@@ -71,19 +71,19 @@ export default async function AgentPage({ params }: PageProps) {
         <div className="flex">
           <div className="mx-auto sm:flex-row md:flex items-center gap-6">
             <ColorCard
-              color="bg-red-500"
+              color="red"
               cardHeader="Step 1:"
               cardDescription="Check sample."
               backContent={<AgentAudioSample agentId={agent.id} />}
             />
             <ColorCard
-              color="bg-blue-600"
+              color="blue"
               cardHeader="Step 2:"
               cardDescription="Call agent."
               backContent={<Conversation agent={agent} />}
             />
             <ColorCard
-              color="bg-yellow-300"
+              color="yellow"
               cardHeader="Step 3:"
               cardDescription="Browse call history."
             />

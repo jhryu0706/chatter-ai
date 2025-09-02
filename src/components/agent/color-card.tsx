@@ -1,13 +1,20 @@
 "use client";
 
+import { cn } from "@/lib/utils";
 import { useState } from "react";
 
 interface ColorCardProps {
-  color: string;
+  color: keyof typeof BG;
   cardHeader: string;
   cardDescription: string;
   backContent?: React.ReactNode;
 }
+
+const BG = {
+  red: "bg-red-500/30 hover:bg-red-500",
+  blue: "bg-blue-600/30 hover:bg-blue-600",
+  yellow: "bg-yellow-300/30 hover:bg-yellow-300",
+} as const;
 
 export default function ColorCard({
   color,
@@ -23,11 +30,10 @@ export default function ColorCard({
     >
       {!hidden && (
         <div
-          className={`justify-end
-        ${color}/30 hover:${color}
-        text-white font-extrabold  shadow-xl
-        transition-colors duration-300 ease-in-out
-      `}
+          className={cn(
+            "justify-end text-white font-extrabold  shadow-xl transition-colors duration-300 ease-in-out",
+            BG[color]
+          )}
         >
           <h1 className="text-3xl text-white">{cardHeader}</h1>
           <p className="text-xl">{cardDescription}</p>

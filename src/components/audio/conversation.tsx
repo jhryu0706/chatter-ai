@@ -3,8 +3,7 @@
 import Image from "next/image";
 import { AgentProps } from "@/app/agent/[id]/page";
 import { useConversation } from "@elevenlabs/react";
-import { useCallback, useEffect, useState } from "react";
-import { DeviceSelectButton } from "./device-selection-button";
+import { useCallback } from "react";
 import { Button } from "../ui/button";
 
 type ConversationProps = { agent: AgentProps };
@@ -71,7 +70,7 @@ export function Conversation({ agent }: ConversationProps) {
     } finally {
       micStream?.getTracks().forEach((t) => t.stop());
     }
-  }, [conversation]);
+  }, [conversation, getMic]);
 
   const stopConversation = useCallback(async () => {
     await conversation.endSession();
