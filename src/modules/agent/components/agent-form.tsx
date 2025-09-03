@@ -3,12 +3,14 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { createNewAgent } from "@/lib/actions/agent-actions";
+import { useUserID } from "@/lib/ctx/user-context";
 import { useRouter } from "next/navigation";
 import { useActionState, useEffect } from "react";
 
 export default function AgentForm() {
   const [state, formAction, isPending] = useActionState(createNewAgent, {});
   const router = useRouter();
+  const userId = useUserID();
 
   useEffect(() => {
     if (state.success) {
@@ -27,6 +29,7 @@ export default function AgentForm() {
           placeholder="Type anything"
           className="flex-1 border-0 shadow-none focus-visible:ring-0 focus-visible:ring-offset-0"
         />
+        <Input type="hidden" name="userId" value={userId!} />
         <Button className="font-bold bg-black" disabled={isPending}>
           Generate
         </Button>

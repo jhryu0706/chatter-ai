@@ -6,6 +6,7 @@ import { useConversation } from "@elevenlabs/react";
 import { useCallback } from "react";
 import { Button } from "../ui/button";
 import { inngest } from "@/inngest/client";
+import { useUserID } from "@/lib/ctx/user-context";
 
 type ConversationProps = { agent: AgentProps };
 
@@ -16,6 +17,7 @@ const MIC_CONSTRAINTS: MediaTrackConstraints = {
 };
 
 export function Conversation({ agent }: ConversationProps) {
+  const userId = useUserID();
   const conversation = useConversation({
     onConnect: () => console.log("Connected"),
     onDisconnect: () => console.log("Disconnected"),
@@ -57,10 +59,6 @@ export function Conversation({ agent }: ConversationProps) {
     let micStream: MediaStream | null = null;
     try {
       micStream = await getMic();
-      console.log(
-        "IR: checking micStream",
-        micStream.getAudioTracks()[0].getSettings()
-      );
       const signedUrl = await getSignedUrl();
       await conversation.startSession({
         signedUrl,
@@ -73,6 +71,7 @@ export function Conversation({ agent }: ConversationProps) {
         data: {
           agentId: agent.id,
           conversationId: convId,
+          userId,
         },
       });
     } catch (error) {

@@ -8,7 +8,7 @@ import {
   BreadcrumbList,
   BreadcrumbSeparator,
 } from "../ui/breadcrumb";
-import { BreadcrumbItemType } from "./breadcrumb-context";
+import { BreadcrumbItemType } from "../../lib/ctx/breadcrumb-context";
 import { usePathname } from "next/navigation";
 
 type CustomBreadcrumbProps = {

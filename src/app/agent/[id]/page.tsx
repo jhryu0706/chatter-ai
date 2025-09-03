@@ -1,5 +1,5 @@
 import AgentButtonGroup from "@/components/agent/agent-button-group";
-import { SetBreadcrumb } from "@/components/home/breadcrumb-context";
+import { SetBreadcrumb } from "@/lib/ctx/breadcrumb-context";
 import { db } from "@/db";
 import { agents, voices } from "@/db/schema";
 import { eq } from "drizzle-orm";

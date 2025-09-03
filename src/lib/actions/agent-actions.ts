@@ -2,7 +2,6 @@
 
 import { db } from "@/db/index";
 import { agents, voices } from "@/db/schema";
-import { getSessionFromCookies } from "../sessionStore";
 import { agentInsertSchemaForUser, agentNameUpdateSchemaForUser } from "@/db/validation";
 import { desc, eq } from "drizzle-orm";
 import { inngest } from "@/inngest/client";
@@ -21,7 +20,7 @@ async function assignVoice(): Promise<string> {
     }
 
 export async function createNewAgent(prev: State, form: FormData): Promise<State> {
-    const sid = await getSessionFromCookies()
+    const userId=form.get("userId")?.toString()
     const userinstructions = form.get("instructions")
 
     const result = agentInsertSchemaForUser.safeParse({instructions: userinstructions})
@@ -38,7 +37,7 @@ export async function createNewAgent(prev: State, form: FormData): Promise<State
     try {
         const inserted = await db.insert(agents).values({
             instructions: result.data.instructions,
-            userId: sid!,
+            userId:userId!,
             voiceId
         }).returning({
             id:agents.id
@@ -101,14 +100,13 @@ export async function createNewAgent(prev: State, form: FormData): Promise<State
     return {success:true, message:"Successfully deleted agent"}
   }
 
-  export async function fetchAgents() {
-    const sid = await getSessionFromCookies()
+  export async function fetchAgents(userId:string) {
     let result;
     try {
         result = await db
         .select()
         .from(agents)
-        .where(eq(agents.userId, sid!))
+        .where(eq(agents.userId, userId!))
         .orderBy(desc(agents.createdAt))
     } catch (err) {
         console.log(err)
