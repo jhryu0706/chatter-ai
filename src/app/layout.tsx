@@ -7,12 +7,21 @@ import {
   LayoutShell,
 } from "@/components/home/breadcrumb-context";
 import { loadOrInitSessionAuth } from "@/lib/sessionStore";
+import { Metadata } from "next";
 
 const inter = Inter({
   subsets: ["latin"],
   variable: "--font-inter",
   display: "swap",
 });
+
+export const metadata: Metadata = {
+  title: "chatter-ai",
+  description: "chat with anything",
+  icons: {
+    icon: "/favicon.png",
+  },
+};
 
 export default async function RootLayout({
   children,
