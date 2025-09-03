@@ -3,16 +3,14 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button"; // Adjust path if needed
 import { fetchOneAgent } from "@/lib/actions/agent-actions";
-
-type AgentAudioSampleProps = {
-  agentId: string;
-};
+import { useAgent } from "@/lib/ctx/agent-context";
 
 function sleep(ms: number): Promise<void> {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
-export default function AgentAudioSample({ agentId }: AgentAudioSampleProps) {
+export default function AgentAudioSample() {
+  const agent = useAgent();
   const [audioUrl, setAudioUrl] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
@@ -20,10 +18,9 @@ export default function AgentAudioSample({ agentId }: AgentAudioSampleProps) {
     setLoading(true);
 
     try {
-      const agent = fetchOneAgent(agentId);
       let sample: string | null = null;
       for (let attempt = 1; attempt <= 3; attempt++) {
-        sample = (await agent).voiceSampleURL;
+        sample = agent.voiceSampleURL;
         if (!sample && attempt < 3) {
           await sleep(1000);
         }

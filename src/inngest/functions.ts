@@ -52,9 +52,7 @@ export const generateSampleAudio = inngest.createFunction(
   {id: "create-new-conv"},
   {event: "conversation/created"},
   async({event}) => {
-
     const {agentId, conversationId, userId} = event.data
-    console.log("IR: in createnewconv with userID", userId)
 
     const result = conversationInsertSchema.safeParse({
       id: conversationId,

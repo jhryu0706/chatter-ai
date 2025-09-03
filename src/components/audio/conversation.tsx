@@ -1,14 +1,12 @@
 "use client";
 
 import Image from "next/image";
-import { AgentProps } from "@/app/agent/[id]/page";
 import { useConversation } from "@elevenlabs/react";
 import { useCallback } from "react";
 import { Button } from "../ui/button";
 import { inngest } from "@/inngest/client";
 import { useUserID } from "@/lib/ctx/user-context";
-
-type ConversationProps = { agent: AgentProps };
+import { useAgent } from "@/lib/ctx/agent-context";
 
 const MIC_CONSTRAINTS: MediaTrackConstraints = {
   echoCancellation: true,
@@ -16,8 +14,13 @@ const MIC_CONSTRAINTS: MediaTrackConstraints = {
   autoGainControl: true,
 };
 
-export function Conversation({ agent }: ConversationProps) {
+export function Conversation() {
   const userId = useUserID();
+  const agent = useAgent();
+
+  console.log("IR: in conversation with userId", userId);
+  console.log("IR: in conversation with agent", agent);
+
   const conversation = useConversation({
     onConnect: () => console.log("Connected"),
     onDisconnect: () => console.log("Disconnected"),
@@ -64,7 +67,7 @@ export function Conversation({ agent }: ConversationProps) {
         signedUrl,
         connectionType: "websocket",
       });
-      const convId = await conversation.getId();
+      const convId = conversation.getId();
 
       inngest.send({
         name: "conversation/created",

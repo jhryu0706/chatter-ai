@@ -1,3 +1,5 @@
+"use server";
+
 import AgentButtonGroup from "@/components/agent/agent-button-group";
 import { SetBreadcrumb } from "@/lib/ctx/breadcrumb-context";
 import { db } from "@/db";
@@ -7,21 +9,9 @@ import { redirect } from "next/navigation";
 import AgentAudioSample from "@/components/agent/agent-audio-sample";
 import { Conversation } from "@/components/audio/conversation";
 import ColorCard from "@/components/agent/color-card";
+import { AgentProps, AgentProvider } from "@/lib/ctx/agent-context";
 
-type PageProps = {
-  params: {
-    id: string;
-  };
-};
-
-export type AgentProps = {
-  name: string | null;
-  id: string;
-  instructions: string;
-  voiceId: string;
-  voiceSampleInstructions: string | null;
-  voiceName: string | null;
-};
+type PageProps = Readonly<{ params: { id: string } }>;
 
 export default async function AgentPage({ params }: PageProps) {
   const id = params.id;
@@ -33,6 +23,7 @@ export default async function AgentPage({ params }: PageProps) {
       voiceId: agents.voiceId,
       voiceSampleInstructions: agents.voiceSampleInstructions,
       voiceName: voices.name,
+      voiceSampleURL: agents.voiceSampleURL,
     })
     .from(agents)
     .leftJoin(voices, eq(agents.voiceId, voices.id))
@@ -44,9 +35,10 @@ export default async function AgentPage({ params }: PageProps) {
   }
 
   const agentNameCleaned = agent.name || "Agent " + agent.id.slice(-4);
+  agent.name = agentNameCleaned;
 
   return (
-    <>
+    <AgentProvider agent={agent}>
       {/* setting breadcrumb */}
       <SetBreadcrumb label={agentNameCleaned} href={`/agent/${agent.id}`} />
 
@@ -74,13 +66,13 @@ export default async function AgentPage({ params }: PageProps) {
               color="red"
               cardHeader="Step 1:"
               cardDescription="Check sample."
-              backContent={<AgentAudioSample agentId={agent.id} />}
+              backContent={<AgentAudioSample />}
             />
             <ColorCard
               color="blue"
               cardHeader="Step 2:"
               cardDescription="Call agent."
-              backContent={<Conversation agent={agent} />}
+              backContent={<Conversation />}
             />
             <ColorCard
               color="yellow"
@@ -90,6 +82,6 @@ export default async function AgentPage({ params }: PageProps) {
           </div>
         </div>
       </div>
-    </>
+    </AgentProvider>
   );
 }
