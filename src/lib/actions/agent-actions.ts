@@ -4,7 +4,6 @@ import { db } from "@/db/index";
 import { agents, voices } from "@/db/schema";
 import { agentInsertSchemaForUser, agentNameUpdateSchemaForUser } from "@/db/validation";
 import { desc, eq } from "drizzle-orm";
-import { inngest } from "@/inngest/client";
 import { NUMBER_OF_AGENTS } from "../utils";
 import { sendNewAgentToInngest } from "@/inngest/actions";
 
