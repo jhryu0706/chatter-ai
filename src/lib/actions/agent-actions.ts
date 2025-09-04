@@ -6,6 +6,7 @@ import { agentInsertSchemaForUser, agentNameUpdateSchemaForUser } from "@/db/val
 import { desc, eq } from "drizzle-orm";
 import { inngest } from "@/inngest/client";
 import { NUMBER_OF_AGENTS } from "../utils";
+import { sendNewAgentToInngest } from "@/inngest/actions";
 
 export type State = {success?: boolean, message?:string; error?:string};
 
@@ -44,16 +45,7 @@ export async function createNewAgent(prev: State, form: FormData): Promise<State
         })
 
         const insertedId = inserted[0].id
-
-        console.log("IR: sending to inngest for agent", inngest.apiBaseUrl);
-        inngest.send({
-            name:"agent/created",
-            data: {
-                "agentId": insertedId,
-                "description": result.data.instructions,
-                "voiceId": voiceId
-            }
-        })
+        await sendNewAgentToInngest(insertedId, result.data.instructions, voiceId)
     } catch(err) {
         console.error("Error inserting agent to DB: ", err)
         return {error:"Error inserting agent to DB"}
