@@ -4,8 +4,9 @@ import { db } from "@/db/index";
 import { agents, voices } from "@/db/schema";
 import { agentInsertSchemaForUser, agentNameUpdateSchemaForUser } from "@/db/validation";
 import { desc, eq } from "drizzle-orm";
-import { inngest } from "@/inngest/client";
 import { NUMBER_OF_AGENTS } from "../utils";
+import { sendNewAgentToInngest } from "@/inngest/actions";
+import { AgentProps } from "../ctx/agent-context";
 
 export type State = {success?: boolean, message?:string; error?:string};
 
@@ -44,16 +45,7 @@ export async function createNewAgent(prev: State, form: FormData): Promise<State
         })
 
         const insertedId = inserted[0].id
-
-        console.log("IR: sending to inngest for agent", inngest.apiBaseUrl);
-        inngest.send({
-            name:"agent/created",
-            data: {
-                "agentId": insertedId,
-                "description": result.data.instructions,
-                "voiceId": voiceId
-            }
-        })
+        await sendNewAgentToInngest(insertedId, result.data.instructions, voiceId)
     } catch(err) {
         console.error("Error inserting agent to DB: ", err)
         return {error:"Error inserting agent to DB"}
@@ -115,11 +107,22 @@ export async function createNewAgent(prev: State, form: FormData): Promise<State
     return result
   }
 
-  export async function fetchOneAgent(id:string) {
-    const agent = await db
-    .select()
-    .from(agents)
-    .where(eq(agents.id, id))
-    .then((rows) => rows[0]);
-    return agent
-  }
+  export async function fetchOneAgent(id:string): Promise<AgentProps> {
+    const agent: AgentProps = await db
+      .select({
+        name: agents.name,
+        id: agents.id,
+        instructions: agents.instructions,
+        voiceId: agents.voiceId,
+        voiceSampleInstructions: agents.voiceSampleInstructions,
+        voiceName: voices.name,
+        voiceSampleURL: agents.voiceSampleURL,
+      })
+      .from(agents)
+      .leftJoin(voices, eq(agents.voiceId, voices.id))
+      .where(eq(agents.id, id))
+      .then(
+        (rows) => rows[0]
+        )
+      return agent
+    }

@@ -19,16 +19,17 @@ export default function AgentButtonGroup({ agentId }: AgentButtonGroupProps) {
   const router = useRouter();
 
   useEffect(() => {
-    const timeout = setTimeout(() => {
-      if (state?.message) {
-        alert(state.message);
-      } else if (state?.error) {
-        alert(state.error);
-      }
-      router.refresh();
-    }, 150);
-    return () => clearTimeout(timeout);
+    if (state == null) return;
+    console.log("IR: state ", state);
+    router.refresh();
   }, [state, router]);
+
+  useEffect(() => {
+    if (delState == null) return;
+    router.refresh();
+    console.log("IR: delstate ", delState);
+    console;
+  }, [delState, router]);
 
   const buttonVariant = "outline";
   const buttonSize = "sm";
