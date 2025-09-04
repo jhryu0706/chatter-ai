@@ -69,7 +69,8 @@ export function Conversation() {
       });
       const convId = conversation.getId();
 
-      inngest.send({
+      console.log("IR: sending to inngest");
+      const result = await inngest.send({
         name: "conversation/created",
         data: {
           agentId: agent.id,
@@ -77,6 +78,7 @@ export function Conversation() {
           userId,
         },
       });
+      console.log("IR: result from inngest, ", result);
     } catch (error) {
       console.error("Failed to start conversation:", error);
     } finally {
@@ -89,8 +91,8 @@ export function Conversation() {
   }, [conversation]);
 
   return (
-    <div className="flex flex-col items-center *:font-medium">
-      <div className="flex flex-col items-center  mb-4">
+    <div className="flex flex-col items-center justify-center w-full h-full text-center *:font-medium">
+      <div className="flex flex-col items-center  mb-4 ">
         {isConnected ? (
           <p>Agent is {conversation.isSpeaking ? "speaking" : "listening"}.</p>
         ) : (
