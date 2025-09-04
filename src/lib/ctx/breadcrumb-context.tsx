@@ -7,7 +7,7 @@ import {
   useEffect,
   useState,
 } from "react";
-import CustomBreadcrumb from "./custom-breadcrumb";
+import CustomBreadcrumb from "../../components/home/custom-breadcrumb";
 
 export type BreadcrumbItemType = { label: string; href?: string };
 type BreadcrumbContextType = {

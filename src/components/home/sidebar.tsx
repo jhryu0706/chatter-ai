@@ -10,10 +10,12 @@ import {
   SidebarSeparator,
 } from "@/components/ui/sidebar";
 import { fetchAgents } from "@/lib/actions/agent-actions";
+import { getSessionFromCookies } from "@/lib/sessionStore";
 import Link from "next/link";
 
 export async function AppSidebar() {
-  const agents = await fetchAgents();
+  const userId = await getSessionFromCookies();
+  const agents = await fetchAgents(userId!);
 
   const sidebarStyles = {
     groupLabel: "text-lg",

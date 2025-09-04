@@ -4,7 +4,6 @@ import { db } from "@/db";
 import { agents, conversation } from "@/db/schema";
 import { eq } from "drizzle-orm";
 import { fetchSampleAudio } from "@/lib/elevenlabs/elevenlabs-actions";
-import { getSessionFromCookies } from "@/lib/sessionStore";
 import { conversationInsertSchema } from "@/db/validation";
 
 const nameGeneratorAgent = createAgent({
@@ -13,7 +12,7 @@ const nameGeneratorAgent = createAgent({
   "You are an expert labeller who will generate a short introduction of the character that the input describes."+
   "The intro should be no longer than 15 words."+
   "Create the final output in this form: "+
-  "[any equivalent of hello, examples are 'what's up' or 'howdy' or 'hey' but you don't have to stick to these examples. Bonus points if you can make me laugh], I am a [description]".trim(),
+  "[any equivalent of hello, examples are 'what's up' or 'howdy' or 'hey' but you don't have to stick to these examples. Bonus points if you can make me laugh], I am a [description]",
   model: openai({model:"gpt-4o-mini", apiKey: process.env.OPEN_AI_API_KEY})
 })
 
@@ -40,7 +39,7 @@ export const generateSampleAudio = inngest.createFunction(
         voiceSampleInstructions: content,
         voiceSampleURL:sample.toString()
       })
-      .where(eq(agentId, agents.id))
+      .where(eq(agents.id,agentId ))
     } catch(err) {
       console.log(err)
       return false
@@ -51,10 +50,9 @@ export const generateSampleAudio = inngest.createFunction(
 
  export const createNewConversation = inngest.createFunction(
   {id: "create-new-conv"},
-  {event: "converstation/created"},
+  {event: "conversation/created"},
   async({event}) => {
-    const {agentId, conversationId} = event.data.conversationId
-    const userId = await getSessionFromCookies()
+    const {agentId, conversationId, userId} = event.data
 
     const result = conversationInsertSchema.safeParse({
       id: conversationId,
@@ -64,7 +62,7 @@ export const generateSampleAudio = inngest.createFunction(
 
     if (!result.success) {
       console.error("Failed to add new conversation to database: ", result.error)
-      return;
+      return false;
     }
 
     try {

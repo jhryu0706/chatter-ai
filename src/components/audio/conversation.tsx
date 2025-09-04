@@ -1,13 +1,12 @@
 "use client";
 
 import Image from "next/image";
-import { AgentProps } from "@/app/agent/[id]/page";
 import { useConversation } from "@elevenlabs/react";
 import { useCallback } from "react";
 import { Button } from "../ui/button";
 import { inngest } from "@/inngest/client";
-
-type ConversationProps = { agent: AgentProps };
+import { useUserID } from "@/lib/ctx/user-context";
+import { useAgent } from "@/lib/ctx/agent-context";
 
 const MIC_CONSTRAINTS: MediaTrackConstraints = {
   echoCancellation: true,
@@ -15,7 +14,13 @@ const MIC_CONSTRAINTS: MediaTrackConstraints = {
   autoGainControl: true,
 };
 
-export function Conversation({ agent }: ConversationProps) {
+export function Conversation() {
+  const userId = useUserID();
+  const agent = useAgent();
+
+  console.log("IR: in conversation with userId", userId);
+  console.log("IR: in conversation with agent", agent);
+
   const conversation = useConversation({
     onConnect: () => console.log("Connected"),
     onDisconnect: () => console.log("Disconnected"),
@@ -57,22 +62,19 @@ export function Conversation({ agent }: ConversationProps) {
     let micStream: MediaStream | null = null;
     try {
       micStream = await getMic();
-      console.log(
-        "IR: checking micStream",
-        micStream.getAudioTracks()[0].getSettings()
-      );
       const signedUrl = await getSignedUrl();
       await conversation.startSession({
         signedUrl,
         connectionType: "websocket",
       });
-      const convId = await conversation.getId();
+      const convId = conversation.getId();
 
       inngest.send({
         name: "conversation/created",
         data: {
           agentId: agent.id,
           conversationId: convId,
+          userId,
         },
       });
     } catch (error) {
@@ -99,8 +101,8 @@ export function Conversation({ agent }: ConversationProps) {
         <Image
           src={"/off-call-phone.png"}
           alt="phone"
-          width={100}
-          height={100}
+          width={150}
+          height={150}
           priority
         />
       </div>

@@ -11,12 +11,6 @@ export async function getSessionFromCookies() {
   return sid
 }
 
-export async function requireSid() {
-  const sid = await getSessionFromCookies()
-  if (!sid) throw new Error("Unauthorized: Missing session identifier.");
-  return sid
-}
-
 export async function getOrCreateUserInDB(sid: string) {
   const existing = await db
   .select()
@@ -29,9 +23,4 @@ export async function getOrCreateUserInDB(sid: string) {
       id: sid,
     });
   }
-}
-
-export async function loadOrInitSessionAuth() {
-  const sid = await requireSid()
-  await getOrCreateUserInDB(sid!);
 }

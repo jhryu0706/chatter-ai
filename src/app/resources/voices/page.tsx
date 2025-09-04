@@ -1,5 +1,5 @@
 import VoiceLibrary from "@/components/agent/voice-library";
-import { SetBreadcrumb } from "@/components/home/breadcrumb-context";
+import { SetBreadcrumb } from "@/lib/ctx/breadcrumb-context";
 
 export default function Page() {
   return (
