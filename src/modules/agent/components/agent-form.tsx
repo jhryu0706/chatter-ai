@@ -9,13 +9,12 @@ import { useActionState, useEffect } from "react";
 
 export default function AgentForm() {
   const [state, formAction, isPending] = useActionState(createNewAgent, {});
-  const router = useRouter();
   const userId = useUserID();
+  const router = useRouter();
 
   useEffect(() => {
-    if (state.success) {
-      router.refresh();
-    }
+    if (state == null) return;
+    router.refresh();
   }, [state, router]);
 
   return (

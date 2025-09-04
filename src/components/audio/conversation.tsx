@@ -18,6 +18,10 @@ export function Conversation() {
   const userId = useUserID();
   const agent = useAgent();
 
+  if (!agent) {
+    throw new Error("Agent not found.");
+  }
+
   console.log("IR: in conversation with userId", userId);
   console.log("IR: in conversation with agent", agent);
 

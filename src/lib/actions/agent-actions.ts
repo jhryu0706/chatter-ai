@@ -6,6 +6,7 @@ import { agentInsertSchemaForUser, agentNameUpdateSchemaForUser } from "@/db/val
 import { desc, eq } from "drizzle-orm";
 import { NUMBER_OF_AGENTS } from "../utils";
 import { sendNewAgentToInngest } from "@/inngest/actions";
+import { AgentProps } from "../ctx/agent-context";
 
 export type State = {success?: boolean, message?:string; error?:string};
 
@@ -106,11 +107,22 @@ export async function createNewAgent(prev: State, form: FormData): Promise<State
     return result
   }
 
-  export async function fetchOneAgent(id:string) {
-    const agent = await db
-    .select()
-    .from(agents)
-    .where(eq(agents.id, id))
-    .then((rows) => rows[0]);
-    return agent
-  }
+  export async function fetchOneAgent(id:string): Promise<AgentProps> {
+    const agent: AgentProps = await db
+      .select({
+        name: agents.name,
+        id: agents.id,
+        instructions: agents.instructions,
+        voiceId: agents.voiceId,
+        voiceSampleInstructions: agents.voiceSampleInstructions,
+        voiceName: voices.name,
+        voiceSampleURL: agents.voiceSampleURL,
+      })
+      .from(agents)
+      .leftJoin(voices, eq(agents.voiceId, voices.id))
+      .where(eq(agents.id, id))
+      .then(
+        (rows) => rows[0]
+        )
+      return agent
+    }

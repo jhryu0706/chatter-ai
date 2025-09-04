@@ -26,6 +26,7 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  // await uploadVoices();
   // moving auth step here
   const userId = await getSessionFromCookies();
   if (!userId) {

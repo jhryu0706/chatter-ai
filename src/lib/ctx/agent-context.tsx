@@ -1,6 +1,14 @@
 "use client";
 
-import { createContext, ReactNode, useContext } from "react";
+import {
+  createContext,
+  ReactNode,
+  useCallback,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
+import { fetchOneAgent } from "../actions/agent-actions";
 
 export type AgentProps = {
   id: string;
@@ -12,24 +20,53 @@ export type AgentProps = {
   voiceSampleURL: string | null;
 };
 
-const AgentContext = createContext<AgentProps | null>(null);
+type AgentContextValue = {
+  agent: AgentProps | null;
+  refresh: (id: string) => Promise<AgentProps>;
+};
+
+const AgentContext = createContext<AgentContextValue | null>(null);
 
 export function useAgent() {
-  const agent = useContext(AgentContext);
-  if (agent === null) {
+  const ctx = useContext(AgentContext);
+  if (ctx === null) {
     throw new Error("useAgent must be used within an <AgentProvider>");
   }
-  return agent;
+  return ctx.agent;
+}
+
+export function useAgentContext() {
+  const ctx = useContext(AgentContext);
+  if (ctx === null) {
+    throw new Error("useAgent must be used within an <AgentProvider>");
+  } else if (!ctx.agent) {
+    throw new Error("Agent is not found in this scope. Ctx not defined.");
+  }
+  return ctx;
 }
 
 export function AgentProvider({
   children,
-  agent,
+  agent: initAgent,
 }: {
   children: ReactNode;
   agent: AgentProps;
 }) {
+  const [agent, setAgent] = useState<AgentProps | null>(initAgent);
+
+  useEffect(() => {
+    setAgent(initAgent);
+  }, [initAgent]);
+
+  const refresh = useCallback(async (id: string): Promise<AgentProps> => {
+    const updatedAgent = await fetchOneAgent(id);
+    setAgent(updatedAgent);
+    return updatedAgent;
+  }, []);
+
   return (
-    <AgentContext.Provider value={agent}>{children}</AgentContext.Provider>
+    <AgentContext.Provider value={{ agent, refresh }}>
+      {children}
+    </AgentContext.Provider>
   );
 }

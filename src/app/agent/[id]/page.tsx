@@ -2,33 +2,18 @@
 
 import AgentButtonGroup from "@/components/agent/agent-button-group";
 import { SetBreadcrumb } from "@/lib/ctx/breadcrumb-context";
-import { db } from "@/db";
-import { agents, voices } from "@/db/schema";
-import { eq } from "drizzle-orm";
 import { redirect } from "next/navigation";
 import AgentAudioSample from "@/components/agent/agent-audio-sample";
 import { Conversation } from "@/components/audio/conversation";
 import ColorCard from "@/components/agent/color-card";
-import { AgentProps, AgentProvider } from "@/lib/ctx/agent-context";
+import { AgentProvider } from "@/lib/ctx/agent-context";
+import { fetchOneAgent } from "@/lib/actions/agent-actions";
 
 type PageProps = Readonly<{ params: { id: string } }>;
 
 export default async function AgentPage({ params }: PageProps) {
   const id = params.id;
-  const agent: AgentProps = await db
-    .select({
-      name: agents.name,
-      id: agents.id,
-      instructions: agents.instructions,
-      voiceId: agents.voiceId,
-      voiceSampleInstructions: agents.voiceSampleInstructions,
-      voiceName: voices.name,
-      voiceSampleURL: agents.voiceSampleURL,
-    })
-    .from(agents)
-    .leftJoin(voices, eq(agents.voiceId, voices.id))
-    .where(eq(agents.id, id))
-    .then((rows) => rows[0]);
+  const agent = await fetchOneAgent(id);
 
   if (!agent) {
     redirect("/");
