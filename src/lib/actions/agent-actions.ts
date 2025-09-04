@@ -45,6 +45,7 @@ export async function createNewAgent(prev: State, form: FormData): Promise<State
 
         const insertedId = inserted[0].id
 
+        console.log("IR: sending to inngest for agent", inngest.apiBaseUrl);
         inngest.send({
             name:"agent/created",
             data: {
