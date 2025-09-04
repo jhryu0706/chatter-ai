@@ -69,7 +69,7 @@ export function Conversation() {
       });
       const convId = conversation.getId();
 
-      console.log("IR: sending to inngest");
+      console.log("IR: sending to inngest for conv", inngest.apiBaseUrl);
       const result = await inngest.send({
         name: "conversation/created",
         data: {
