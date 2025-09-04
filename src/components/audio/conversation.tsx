@@ -44,8 +44,6 @@ export function Conversation() {
     },
   });
 
-  const convId = conversation.getId();
-
   const getMic = useCallback(async () => {
     return navigator.mediaDevices.getUserMedia({
       audio: { ...MIC_CONSTRAINTS },
@@ -73,6 +71,7 @@ export function Conversation() {
         signedUrl,
         connectionType: "websocket",
       });
+      const convId = conversation.getId();
       await sendNewConversationToInngest(agent.id, convId!, userId!);
     } catch (error) {
       console.error("Failed to start conversation:", error);

@@ -6,6 +6,7 @@ import { BreadcrumbProvider, LayoutShell } from "@/lib/ctx/breadcrumb-context";
 import { getOrCreateUserInDB, getSessionFromCookies } from "@/lib/sessionStore";
 import { Metadata } from "next";
 import { UserProvider } from "@/lib/ctx/user-context";
+import { uploadVoices } from "@/lib/elevenlabs/elevenlabs-actions";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -26,7 +27,9 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  // await uploadVoices();
+  // this is really just for when there is a new db setup and you need to pull the voice library
+  await uploadVoices();
+
   // moving auth step here
   const userId = await getSessionFromCookies();
   if (!userId) {
