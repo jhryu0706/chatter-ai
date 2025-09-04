@@ -1,8 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Button } from "@/components/ui/button"; // Adjust path if needed
-import { fetchOneAgent } from "@/lib/actions/agent-actions";
+import { Button } from "@/components/ui/button";
 import { useAgent } from "@/lib/ctx/agent-context";
 
 function sleep(ms: number): Promise<void> {
