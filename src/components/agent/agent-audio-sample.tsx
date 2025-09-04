@@ -21,7 +21,7 @@ export default function AgentAudioSample() {
       for (let attempt = 1; attempt <= 3; attempt++) {
         sample = agent.voiceSampleURL;
         if (!sample && attempt < 3) {
-          await sleep(1000);
+          await sleep(3000);
         }
       }
 
