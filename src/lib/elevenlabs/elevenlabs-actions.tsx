@@ -1,5 +1,7 @@
 "use server";
 
+import { db } from "@/db";
+import { voices } from "@/db/schema";
 import { ElevenLabsClient } from "@elevenlabs/elevenlabs-js";
 
 const elevenlabs = new ElevenLabsClient({
@@ -36,23 +38,26 @@ export async function fetchAllVoices() {
   return elevenlabs.voices.getAll();
 }
 
-// // call this when you need to refresh voices
-// export async function uploadVoices() {
-//   const allVoices = fetchAllVoices();
-//   const formattedVoices = (await allVoices).voices.map((voice, index) => ({
-//     id: voice.voiceId.toString(),
-//     name: voice.name!.toString(),
-//     description: voice.description!.toString(),
-//     orderNumber: index,
-//   }));
-//   let result;
-//   try {
-//     result = await db
-//       .insert(voices)
-//       .values(formattedVoices)
-//       .onConflictDoNothing();
-//   } catch (err) {
-//     return err;
-//   }
-//   return result;
-// }
+export async function uploadVoices() {
+  const rows = await db.select().from(voices).limit(1);
+  if (rows.length > 0) {
+    return;
+  }
+  const allVoices = fetchAllVoices();
+  const formattedVoices = (await allVoices).voices.map((voice, index) => ({
+    id: voice.voiceId.toString(),
+    name: voice.name!.toString(),
+    description: voice.description!.toString(),
+    orderNumber: index,
+  }));
+  let result;
+  try {
+    result = await db
+      .insert(voices)
+      .values(formattedVoices)
+      .onConflictDoNothing();
+  } catch (err) {
+    return err;
+  }
+  return result;
+}
