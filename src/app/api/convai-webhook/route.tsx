@@ -31,7 +31,11 @@ export async function POST(req: NextRequest) {
     await handleTranscript(event);
   } else if (event.type === "post_call_audio") {
     console.log("audio event data", JSON.stringify(event, null, 2));
-    await handleAudio(event);
+    try {
+      await handleAudio(event);
+    } catch (err) {
+      console.log(err);
+    }
   } else {
     return NextResponse.json({ error: "Unknown event type" }, { status: 400 });
   }
@@ -122,15 +126,18 @@ async function handleAudio(event: PostCallAudioEvent) {
   console.log("IR: handling audio", event.data);
   const conversationId = event.data.conversation_id;
   try {
-    await db
+    const updated = await db
       .update(conversation)
       .set({
         recording: event.data.full_audio,
       })
-      .where(eq(conversation.id, conversationId));
+      .where(eq(conversation.id, conversationId))
+      .returning({ id: conversation.id });
+    if (updated.length === 0) {
+      console.error("[audio] No conversation found for ID:", conversationId);
+    }
   } catch (err) {
-    console.error("Failed to save audio due to this error: ", err);
-    return;
+    console.error("[audio] DB error:", err);
+    throw err;
   }
-  return;
 }
