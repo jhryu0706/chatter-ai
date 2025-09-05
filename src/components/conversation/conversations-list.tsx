@@ -8,7 +8,6 @@ import { Separator } from "../ui/separator";
 import { ScrollArea } from "../ui/scroll-area";
 import { getConversationsForAgent } from "@/lib/actions/agent-actions";
 import { Button } from "../ui/button";
-import { LoaderIcon, LoaderPinwheel } from "lucide-react";
 
 function Row({
   conv,
