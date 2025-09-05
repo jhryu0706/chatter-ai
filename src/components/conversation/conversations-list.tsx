@@ -1,7 +1,7 @@
 "use client";
 
 import { useAgentContext } from "@/lib/ctx/agent-context";
-import { cn, Conversation, formatDuration, formatTime } from "@/lib/utils";
+import { Conversation, formatDuration, formatTime } from "@/lib/utils";
 import { Badge } from "../ui/badge";
 import { useCallback, useState } from "react";
 import { Separator } from "../ui/separator";
