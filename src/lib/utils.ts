@@ -86,3 +86,16 @@ export interface PostCallTranscriptionEvent {
 }
 
 export type WebhookEvent = PostCallAudioEvent | PostCallTranscriptionEvent;
+
+export type TranscriptTurn = {
+  role: "agent" | "user";
+  message: string;
+  tool_calls: unknown;
+  tool_results: unknown;
+  feedback: unknown;
+  time_in_call_secs: number;
+  conversation_turn_metrics: {
+    convai_llm_service_ttfb?: { elapsed_time: number };
+    convai_llm_service_ttf_sentence?: { elapsed_time: number };
+  } | null;
+};

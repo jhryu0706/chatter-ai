@@ -28,7 +28,9 @@ export const transcriptInsertSchema = createInsertSchema(conversation, {
 .pick({
     id:true,
     durationSeconds:true,
-    startTimeUNIX:true
+    startTimeUNIX:true,
+    transcript:true,
+    summary:true
 })
 
 export const conversationInsertSchema = createInsertSchema(conversation, {
