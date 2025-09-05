@@ -99,3 +99,39 @@ export type TranscriptTurn = {
     convai_llm_service_ttf_sentence?: { elapsed_time: number };
   } | null;
 };
+
+export type Conversation = {
+  id: string;
+  startTimeUNIX: number; 
+  durationSeconds: number;
+  summary?: string | null;
+};
+
+export function toDate(ts: number) {
+  // accept seconds or milliseconds
+  return new Date(ts < 2_000_000_000 ? ts * 1000 : ts);
+}
+
+
+export function formatTime(ts: number) {
+  const d = toDate(ts);
+  // e.g., Sep 4, 2025 · 3:17 PM
+  return d.toLocaleString(undefined, {
+    year: "numeric",
+    month: "short",
+    day: "2-digit",
+    hour: "numeric",
+    minute: "2-digit",
+  });
+}
+
+
+export function formatDuration(seconds: number) {
+  const s = Math.max(0, Math.floor(seconds));
+  const h = Math.floor(s / 3600);
+  const m = Math.floor((s % 3600) / 60);
+  const sec = s % 60;
+  if (h > 0) return `${h}h ${m}m ${sec}s`;
+  if (m > 0) return `${m}m ${sec}s`;
+  return `${sec}s`;
+}

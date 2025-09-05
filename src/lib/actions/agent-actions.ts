@@ -1,10 +1,10 @@
 "use server"
 
 import { db } from "@/db/index";
-import { agents, voices } from "@/db/schema";
+import { agents, conversation, voices } from "@/db/schema";
 import { agentInsertSchemaForUser, agentNameUpdateSchemaForUser } from "@/db/validation";
 import { desc, eq } from "drizzle-orm";
-import { NUMBER_OF_AGENTS } from "../utils";
+import { Conversation, NUMBER_OF_AGENTS } from "../utils";
 import { sendNewAgentToInngest } from "@/inngest/actions";
 import { AgentProps } from "../ctx/agent-context";
 
@@ -126,3 +126,24 @@ export async function createNewAgent(prev: State, form: FormData): Promise<State
         )
       return agent
     }
+
+
+export async function getConversationsForAgent(agentId: string): Promise<Conversation[]> {
+  const rows = await db
+    .select({
+      id: conversation.id,
+      startTimeUNIX: conversation.startTimeUNIX,
+      durationSeconds: conversation.durationSeconds,
+      summary: conversation.summary,
+    })
+    .from(conversation)
+    .where(eq(conversation.agentId, agentId))
+    .orderBy(desc(conversation.startTimeUNIX));
+
+  return rows.map(r => ({
+    id: r.id,
+    startTimeUNIX: Number(r.startTimeUNIX),
+    durationSeconds: Number(r.durationSeconds),
+    summary: r.summary ?? null,
+  }));
+}
