@@ -28,10 +28,14 @@ export async function POST(req: NextRequest) {
 
   if (event.type === "post_call_transcription") {
     console.log("transcript event data", JSON.stringify(event, null, 2));
-    handleTranscript(event);
+    await handleTranscript(event);
   } else if (event.type === "post_call_audio") {
     console.log("audio event data", JSON.stringify(event, null, 2));
-    handleAudio(event);
+    try {
+      await handleAudio(event);
+    } catch (err) {
+      console.log(err);
+    }
   } else {
     return NextResponse.json({ error: "Unknown event type" }, { status: 400 });
   }
@@ -85,11 +89,15 @@ async function handleTranscript(event: PostCallTranscriptionEvent) {
   const conversationId = event.data.conversation_id;
   const startTimeUNIX = event.event_timestamp;
   const durationSeconds = event.data.metadata.call_duration_secs;
+  const summary = event.data.analysis.transcript_summary;
+  const rawTranscript = event.data.transcript;
 
   const result = transcriptInsertSchema.safeParse({
     id: conversationId,
     startTimeUNIX,
     durationSeconds,
+    summary,
+    rawTranscript,
   });
 
   if (!result.success) {
@@ -103,6 +111,8 @@ async function handleTranscript(event: PostCallTranscriptionEvent) {
       .set({
         startTimeUNIX,
         durationSeconds,
+        summary,
+        transcript: rawTranscript,
       })
       .where(eq(conversation.id, conversationId));
   } catch (err) {
@@ -113,17 +123,21 @@ async function handleTranscript(event: PostCallTranscriptionEvent) {
 }
 
 async function handleAudio(event: PostCallAudioEvent) {
+  console.log("IR: handling audio", event.data);
   const conversationId = event.data.conversation_id;
   try {
-    await db
+    const updated = await db
       .update(conversation)
       .set({
         recording: event.data.full_audio,
       })
-      .where(eq(conversation.id, conversationId));
+      .where(eq(conversation.id, conversationId))
+      .returning({ id: conversation.id });
+    if (updated.length === 0) {
+      console.error("[audio] No conversation found for ID:", conversationId);
+    }
   } catch (err) {
-    console.error("Failed to save audio due to this error: ", err);
-    return;
+    console.error("[audio] DB error:", err);
+    throw err;
   }
-  return;
 }

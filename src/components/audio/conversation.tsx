@@ -22,9 +22,6 @@ export function Conversation() {
     throw new Error("Agent not found.");
   }
 
-  console.log("IR: in conversation with userId", userId);
-  console.log("IR: in conversation with agent", agent);
-
   const conversation = useConversation({
     onConnect: () => console.log("Connected"),
     onDisconnect: () => console.log("Disconnected"),

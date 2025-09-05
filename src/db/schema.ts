@@ -1,4 +1,5 @@
-import { pgTable, text,boolean,timestamp, integer } from "drizzle-orm/pg-core";
+import { TranscriptTurn } from "@/lib/utils";
+import { pgTable, text,boolean,timestamp, integer, jsonb } from "drizzle-orm/pg-core";
 import { ulid } from "ulid";
 
 // user tables
@@ -40,7 +41,9 @@ export const conversation = pgTable("conversation",{
     .references(()=>agents.id, {onDelete:"cascade"}),
   recording: text("recording"),
   startTimeUNIX: integer("start_time_UNIX"),
-  durationSeconds: integer("duration_seconds")
+  durationSeconds: integer("duration_seconds"),
+  transcript: jsonb("transcript").$type<TranscriptTurn[]>(),
+  summary: text("summary")
 })
 
 export const voices = pgTable("voices", {
