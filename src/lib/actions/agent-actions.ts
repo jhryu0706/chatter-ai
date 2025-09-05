@@ -135,6 +135,7 @@ export async function getConversationsForAgent(agentId: string): Promise<Convers
       startTimeUNIX: conversation.startTimeUNIX,
       durationSeconds: conversation.durationSeconds,
       summary: conversation.summary,
+      audioURL: conversation.recordingURL
     })
     .from(conversation)
     .where(eq(conversation.agentId, agentId))
@@ -145,5 +146,6 @@ export async function getConversationsForAgent(agentId: string): Promise<Convers
     startTimeUNIX: Number(r.startTimeUNIX),
     durationSeconds: Number(r.durationSeconds),
     summary: r.summary ?? null,
+    audioURL: r.audioURL ?? null
   }));
 }
