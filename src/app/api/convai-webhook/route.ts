@@ -10,6 +10,7 @@ import {
   PostCallTranscriptionEvent,
   WebhookEvent,
 } from "@/lib/utils";
+import { put } from "@vercel/blob";
 
 export async function GET() {
   return NextResponse.json({ status: "webhook listening" }, { status: 200 });
@@ -125,11 +126,30 @@ async function handleTranscript(event: PostCallTranscriptionEvent) {
 async function handleAudio(event: PostCallAudioEvent) {
   console.log("IR: handling audio", event.data);
   const conversationId = event.data.conversation_id;
+
+  // decode base64 → Buffer
+  const b64 = event.data.full_audio;
+  if (!b64) throw new Error("Missing full_audio base64");
+
+  const buf = Buffer.from(b64, "base64");
+
+  // upload to Vercel Blob
+  const objectName = `conv/${conversationId}.mp3`;
+  const { url } = await put(objectName, buf, {
+    access: "public",
+    allowOverwrite: false,
+    cacheControlMaxAge: 604800,
+  });
+
+  if (!url) {
+    console.error("Error uploading to blob storage.");
+  }
+
   try {
     const updated = await db
       .update(conversation)
       .set({
-        recording: event.data.full_audio,
+        recordingURL: url,
       })
       .where(eq(conversation.id, conversationId))
       .returning({ id: conversation.id });

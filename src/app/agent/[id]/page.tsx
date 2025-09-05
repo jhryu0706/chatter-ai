@@ -4,10 +4,14 @@ import AgentButtonGroup from "@/components/agent/agent-button-group";
 import { SetBreadcrumb } from "@/lib/ctx/breadcrumb-context";
 import { redirect } from "next/navigation";
 import AgentAudioSample from "@/components/agent/agent-audio-sample";
-import { Conversation } from "@/components/audio/conversation";
 import ColorCard from "@/components/agent/color-card";
 import { AgentProvider } from "@/lib/ctx/agent-context";
-import { fetchOneAgent } from "@/lib/actions/agent-actions";
+import {
+  fetchOneAgent,
+  getConversationsForAgent,
+} from "@/lib/actions/agent-actions";
+import ConversationsList from "@/components/conversation/conversations-list";
+import { Conversation } from "@/components/conversation/request-conversation";
 
 type PageProps = Readonly<{ params: { id: string } }>;
 
@@ -20,7 +24,8 @@ export default async function AgentPage({ params }: PageProps) {
   }
 
   const agentNameCleaned = agent.name || "Agent " + agent.id.slice(-4);
-  agent.name = agentNameCleaned;
+
+  const conv = await getConversationsForAgent(id);
 
   return (
     <AgentProvider agent={agent}>
@@ -63,6 +68,7 @@ export default async function AgentPage({ params }: PageProps) {
               color="yellow"
               cardHeader="Step 3:"
               cardDescription="Browse call history."
+              backContent={<ConversationsList conversations={conv} />}
             />
           </div>
         </div>
