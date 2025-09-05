@@ -12,18 +12,20 @@ import { Button } from "../ui/button";
 function Row({ conv, index }: { conv: Conversation; index: number }) {
   return (
     <div className="p-3 hover:bg-sidebar-accent rounded-sm">
-      <div className="flex items-start justify-between">
-        <div>{index + 1}.</div>
-        <div className="min-w-0">
-          <div className="font-medium truncate">
-            {formatTime(conv.startTimeUNIX)}
+      <a href={`/conversation/${conv.id}`}>
+        <div className="flex items-start justify-between">
+          <div>{index + 1}.</div>
+          <div className="min-w-0">
+            <div className="font-medium truncate">
+              {formatTime(conv.startTimeUNIX)}
+            </div>
+            <div className="text-xs">{conv.id}</div>
           </div>
-          <div className="text-xs">{conv.id}</div>
+          <Badge variant="outline" className="shrink-0">
+            {formatDuration(conv.durationSeconds)}
+          </Badge>
         </div>
-        <Badge variant="outline" className="shrink-0">
-          {formatDuration(conv.durationSeconds)}
-        </Badge>
-      </div>
+      </a>
     </div>
   );
 }
