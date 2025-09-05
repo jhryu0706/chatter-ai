@@ -51,7 +51,7 @@ export default async function AgentPage({ params }: PageProps) {
         </dl>
 
         <div className="flex">
-          <div className="mx-auto sm:flex-row md:flex items-center gap-6">
+          <div className="mx-auto flex flex-col md:flex-row items-center gap-6 overflow-hidden *:max-w-full *:font-medium">
             <ColorCard
               color="red"
               cardHeader="Step 1:"

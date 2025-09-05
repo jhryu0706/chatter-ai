@@ -25,7 +25,7 @@ export default function ColorCard({
   const [hidden, setHidden] = useState(false);
   return (
     <div
-      className="*:w-[22vmax] *:aspect-square *:flex *:flex-col *:p-6 *:rounded-sm *:cursor-pointer"
+      className="*:w-[70vw] sm:*:w-[22vmax] *:aspect-square *:flex *:flex-col *:p-6 *:rounded-sm *:cursor-pointer"
       onClick={() => setHidden((v) => (v ? v : true))}
     >
       {!hidden && (

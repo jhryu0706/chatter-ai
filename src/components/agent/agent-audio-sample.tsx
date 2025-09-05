@@ -58,7 +58,7 @@ export default function AgentAudioSample() {
       )}
       {audioUrl && (
         <div className="w-full max-w-sm">
-          <dt className="font-medium">Hello from Agent:</dt>
+          <dt>Hello from Agent:</dt>
           <audio
             className="justify-center mt-2 w-full"
             src={audioUrl}
