@@ -105,6 +105,7 @@ export type Conversation = {
   startTimeUNIX: number; 
   durationSeconds: number;
   summary?: string | null;
+  audioURL?: string|null;
 };
 
 export function toDate(ts: number) {

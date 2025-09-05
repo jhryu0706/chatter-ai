@@ -82,8 +82,8 @@ export function Conversation() {
   }, [conversation]);
 
   return (
-    <div className="flex flex-col items-center justify-center w-full h-full text-center *:font-medium">
-      <div className="flex flex-col items-center  mb-4 ">
+    <div className="flex flex-col items-center justify-center w-full h-full text-center">
+      <div className="flex flex-col items-center  mb-4">
         {isConnected ? (
           <p>Agent is {conversation.isSpeaking ? "speaking" : "listening"}.</p>
         ) : (

@@ -20,14 +20,12 @@ export default function AgentButtonGroup({ agentId }: AgentButtonGroupProps) {
 
   useEffect(() => {
     if (state == null) return;
-    console.log("IR: state ", state);
     router.refresh();
   }, [state, router]);
 
   useEffect(() => {
     if (delState == null) return;
     router.refresh();
-    console.log("IR: delstate ", delState);
     console;
   }, [delState, router]);
 
