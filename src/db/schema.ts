@@ -39,7 +39,7 @@ export const conversation = pgTable("conversation",{
   agentId: text("agent_id")
     .notNull()
     .references(()=>agents.id, {onDelete:"cascade"}),
-  recording: text("recording"),
+  recordingURL: text("recordingURL"),
   startTimeUNIX: integer("start_time_UNIX"),
   durationSeconds: integer("duration_seconds"),
   transcript: jsonb("transcript").$type<TranscriptTurn[]>(),
