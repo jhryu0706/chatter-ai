@@ -11,9 +11,9 @@ interface ColorCardProps {
 }
 
 const BG = {
-  red: "bg-red-500/30 hover:bg-red-500",
-  blue: "bg-blue-600/30 hover:bg-blue-600",
-  yellow: "bg-yellow-300/30 hover:bg-yellow-300",
+  red: "sm:bg-red-500/30 bg-red-500 hover:bg-red-500",
+  blue: "sm:bg-blue-600/30 bg-blue-600 hover:bg-blue-600",
+  yellow: "sm:bg-yellow-300/30 bg-yellow-300 hover:bg-yellow-300",
 } as const;
 
 export default function ColorCard({
@@ -31,7 +31,7 @@ export default function ColorCard({
       {!hidden && (
         <div
           className={cn(
-            "justify-end text-white font-extrabold  shadow-xl transition-colors duration-300 ease-in-out",
+            "justify-end text-white font-extrabold transition-colors duration-300 ease-in-out",
             BG[color]
           )}
         >

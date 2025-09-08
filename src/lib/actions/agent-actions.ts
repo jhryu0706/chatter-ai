@@ -34,6 +34,7 @@ export async function createNewAgent(prev: State, form: FormData): Promise<State
     
     // randomly assigning a voice
     const voiceId = await assignVoice()
+    let agentId: string|null=null;
 
     try {
         const inserted = await db.insert(agents).values({
@@ -44,13 +45,13 @@ export async function createNewAgent(prev: State, form: FormData): Promise<State
             id:agents.id
         })
 
-        const insertedId = inserted[0].id
-        await sendNewAgentToInngest(insertedId, result.data.instructions, voiceId)
+        agentId = inserted[0].id
+        await sendNewAgentToInngest(agentId, result.data.instructions, voiceId)
+        return {success:true, message:`${agentId}`}
     } catch(err) {
         console.error("Error inserting agent to DB: ", err)
         return {error:"Error inserting agent to DB"}
     }
-    return {success:true, message:"New agent added."}
   }
 
   export async function updateAgentName(prev: State, form:FormData): Promise<State> {

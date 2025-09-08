@@ -2,11 +2,12 @@
 
 import Image from "next/image";
 import { useConversation } from "@elevenlabs/react";
-import { useCallback } from "react";
+import { useCallback, useState } from "react";
 import { Button } from "../ui/button";
 import { useUserID } from "@/lib/ctx/user-context";
-import { useAgent } from "@/lib/ctx/agent-context";
+import { useAgentContext } from "@/lib/ctx/agent-context";
 import { sendNewConversationToInngest } from "@/inngest/actions";
+import MicSpectrum from "../agent/mic-visualizer";
 
 const MIC_CONSTRAINTS: MediaTrackConstraints = {
   echoCancellation: true,
@@ -16,7 +17,8 @@ const MIC_CONSTRAINTS: MediaTrackConstraints = {
 
 export function Conversation() {
   const userId = useUserID();
-  const agent = useAgent();
+  const { agent, refresh } = useAgentContext();
+  const [micStream, setMicStream] = useState<MediaStream | null>(null);
 
   if (!agent) {
     throw new Error("Agent not found.");
@@ -60,25 +62,35 @@ export function Conversation() {
   };
 
   const startConversation = useCallback(async () => {
-    let micStream: MediaStream | null = null;
     try {
-      micStream = await getMic();
+      let stream: MediaStream | null = null;
+      stream = await getMic();
+      setMicStream(stream);
+
       const signedUrl = await getSignedUrl();
       await conversation.startSession({
         signedUrl,
         connectionType: "websocket",
       });
+
       const convId = conversation.getId();
       await sendNewConversationToInngest(agent.id, convId!, userId!);
     } catch (error) {
       console.error("Failed to start conversation:", error);
-    } finally {
       micStream?.getTracks().forEach((t) => t.stop());
     }
   }, [conversation, getMic]);
 
   const stopConversation = useCallback(async () => {
-    await conversation.endSession();
+    try {
+      await conversation.endSession();
+    } finally {
+      setMicStream((prev) => {
+        prev?.getTracks().forEach((t) => t.stop());
+        return null;
+      });
+      await refresh(agent.id);
+    }
   }, [conversation]);
 
   return (
@@ -90,15 +102,21 @@ export function Conversation() {
           <p>Agent is not here.</p>
         )}
       </div>
-      <div>
-        <Image
-          src={"/off-call-phone.png"}
-          alt="phone"
-          width={150}
-          height={150}
-          priority
-        />
-      </div>
+      {micStream ? (
+        <div>
+          <MicSpectrum stream={micStream} height={140} width={360} />
+        </div>
+      ) : (
+        <div>
+          <Image
+            src={"/off-call-phone.png"}
+            alt="phone"
+            width={150}
+            height={150}
+            priority
+          />
+        </div>
+      )}
       <p className="underline underline-offset-3 mb-4">
         Status: {conversation.status}
       </p>

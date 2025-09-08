@@ -1,9 +1,9 @@
 "use client";
 
-import { useAgentContext } from "@/lib/ctx/agent-context";
+import { AgentProps, useAgentContext } from "@/lib/ctx/agent-context";
 import { Conversation, formatDuration, formatTime } from "@/lib/utils";
 import { Badge } from "../ui/badge";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Separator } from "../ui/separator";
 import { ScrollArea } from "../ui/scroll-area";
 import { getConversationsForAgent } from "@/lib/actions/agent-actions";
@@ -14,12 +14,25 @@ function Row({
   index,
   isOpen,
   onToggle,
+  refresh,
+  agentId,
 }: {
   conv: Conversation;
   index: number;
   isOpen: boolean;
   onToggle: (id: string) => void;
+  refresh: (id: string) => Promise<AgentProps>;
+  agentId: string;
 }) {
+  useEffect(() => {
+    if (conv.startTimeUNIX == 0 && agentId) {
+      const id = setInterval(() => {
+        refresh(agentId);
+      }, 1000);
+      return () => clearInterval(id);
+    }
+  }, [conv.startTimeUNIX, agentId, refresh]);
+
   return (
     <Button
       variant="ghost"
@@ -30,7 +43,11 @@ function Row({
         <div className="flex items-center justify-between">
           <div className="truncate items-center justify-between *:mr-3">
             <span>{index + 1}.</span>
-            <span>{formatTime(conv.startTimeUNIX)}</span>
+            <span>
+              {conv.startTimeUNIX == 0
+                ? "Updating..."
+                : formatTime(conv.startTimeUNIX)}
+            </span>
           </div>
           <Badge variant="outline">
             {isOpen ? "Selected" : formatDuration(conv.durationSeconds)}
@@ -52,7 +69,7 @@ export default function ConversationList({
   conversations: Conversation[];
   emptyState?: React.ReactNode;
 }) {
-  const { agent } = useAgentContext();
+  const { agent, refresh } = useAgentContext();
 
   const [list, setList] = useState<Conversation[]>(conversations);
   const [openId, setOpenId] = useState<string | null>(null);
@@ -107,6 +124,8 @@ export default function ConversationList({
               index={index}
               isOpen={openId === c.id}
               onToggle={handleToggleRow}
+              refresh={refresh}
+              agentId={agent!.id}
             />
           ))}
         </div>
