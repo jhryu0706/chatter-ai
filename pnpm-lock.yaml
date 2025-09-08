@@ -104,6 +104,9 @@ importers:
       '@vercel/blob':
         specifier: ^1.1.1
         version: 1.1.1
+      audiomotion-analyzer:
+        specifier: ^4.5.1
+        version: 4.5.1
       class-variance-authority:
         specifier: ^0.7.1
         version: 0.7.1
@@ -2551,6 +2554,9 @@ packages:
 
   async-sema@3.1.1:
     resolution: {integrity: sha512-tLRNUXati5MFePdAk8dw7Qt7DpxPB60ofAgn8WRhW6a2rcimZnYBP9oxHiv0OHy+Wz7kPMG+t4LGdt31+4EmGg==}
+
+  audiomotion-analyzer@4.5.1:
+    resolution: {integrity: sha512-vEO5HgivsZa9ZhQDItSMjXD5+qsRu6rAEKzAmrg7HbOFeM4tPVrE/wxiRREWxzbGpuH9NZT4Ze+v95G1w/rRAA==}
 
   available-typed-arrays@1.0.7:
     resolution: {integrity: sha512-wvUjBtSGN7+7SjNpq/9M2Tg350UZD3q62IFZLbRAR1bSMlCo1ZaeW+BJ+D090e4hIIZLBcTDWe4Mh4jvUDajzQ==}
@@ -7482,6 +7488,8 @@ snapshots:
 
   async-sema@3.1.1:
     optional: true
+
+  audiomotion-analyzer@4.5.1: {}
 
   available-typed-arrays@1.0.7:
     dependencies:
